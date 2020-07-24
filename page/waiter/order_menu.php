@@ -29,24 +29,24 @@
         foreach ($data as $dataB) {
         ?>
 
-        <li class="list-group-item">
-            <div class="row">
-                <div class="col-md-2">
-                    <img class="card-img-top" style="width: 80px;height: 80px" src="img/<?=$dataB['photo']?>" alt="Card image cap">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img class="card-img-top" style="width: 80px;height: 80px" src="img/<?=$dataB['photo']?>" alt="Card image cap">
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="card-title"><?=$dataB['name_menu']?></h5>
+                        <p class="card-text" style="color: red;">Rp. <?=$dataB['harga']?></p>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="?page=detail_menu&kategori=<?=$dataB['kategori_id']?>&kd=<?=$dataB['kd_menu']?>" class="btn btn-primary float-right">Order</a>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h5 class="card-title"><?=$dataB['name_menu']?></h5>
-                    <p class="card-text" style="color: red;">Rp. <?=$dataB['harga']?></p>
-                </div>
-                <div class="col-md-4">
-                    <a href="?page=detail_menu&kategori=<?=$dataB['kategori_id']?>&kd=<?=$dataB['kd_menu']?>" class="btn btn-primary float-right">Order</a>
-                </div>
-            </div>
-            
-            <div class="">
-                    
-                </div>
-        </li>
+                
+                <div class="">
+                        
+                    </div>
+            </li>
         
         <!-- div class="col-auto mb-3">
             <div class="card" style="width: 18rem;">

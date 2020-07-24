@@ -1,7 +1,10 @@
 <?php
+exit();
     include "config/config.php";
 
-    header("Location: ".BASE_URL."index_waiter.php", true, 301);
+    #hax - go to menu
+    // header("Location: ".BASE_URL."index_waiter.php", true, 301);
+    header("Location: ".BASE_URL."menu.php", true, 301);
     exit();
 
     include "config/controller.php";

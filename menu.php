@@ -1,4 +1,5 @@
 <?php
+exit();
     include "config/controller.php";
     include "config/config.php";
     $id = new Resto();

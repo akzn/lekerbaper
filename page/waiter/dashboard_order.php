@@ -7,9 +7,9 @@
     $table = "tb_kategori";
     $data  = $db->select($table);
 
-    if ($_SESSION['username']=='') {
+    /*if ($_SESSION['username']=='') {
         ?><script><?php echo("location.href = '".BASE_URL."index_waiter.php';");?></script><?php
-    }
+    }*/
 ?>
 <section class="p-b-55">
     <div hidden class="row align-items-center" style="height: 600px; background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('images/bg3.jpg') no-repeat; background-size: cover;">
@@ -28,10 +28,10 @@
                     <h1>Kategori</h1>
                 </div>
             </div>
-            <br>
+            <!-- <br>
             <h3 class="float-right"><i>Tamu : <?=$auth2['name']?> <br> No Meja : <?=$auth['no_meja']?></i></h3>
             <br>
-            <br>
+            <br> -->
         </section>
     </div>
     <div class="container m-t-20">
