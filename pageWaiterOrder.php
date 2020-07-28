@@ -1,18 +1,28 @@
 <?php
-    include "config/controller.php";
     include "config/config.php";
+    include "config/controller.php";
+    include "controller/meja.php";
+    
     $id = new Resto();
+    $classMeja = new Meja();
     session_start();
     $auth     = $id->AuthUser($_SESSION['username']);
     $auth2    = $id->AuthPelanggan($_SESSION['username']);
     $response = $id->sessionCheck();
 
     # Nama pelanggan dan meja 
-    $customer = 'Masih Kosong';
-    if ($auth['name'] != '') {
-        $customer = $auth['name'];
+    $waiter = 'Masih Kosong';
+    if ($auth['name']) {
+        $waiter = $auth['name'];
     }
 
+    $customer;
+    if ($_GET['cust']) {
+        $customer = $_GET['cust'];
+    }
+
+    $listMeja = $classMeja->getMeja();
+    // var_dump($listMeja);
     $meja = "Belum Dipilih";
     if ($auth2['no_meja'] != '') {
         $meja = $auth2['no_meja'];
@@ -114,7 +124,7 @@
         <meta name="author" content="Hau Nguyen">
         <meta name="keywords" content="au theme template">
         <!-- Title Page-->
-        <title>Admin</title>
+        <title>Menu</title>
         <!-- Fontfaces CSS-->
         <link href="css/font-face.css" rel="stylesheet" media="all">
         <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
@@ -150,10 +160,9 @@
                         <div class="header__tool">
                             <div class="header-button-item js-item-menu" style="color:black; font-size: 20px">
                                 <!-- <a style="color: white;" id="btdelete" class="btn btn-primary btn-md">Selesai Order <i class="fa fa-check"></i></a> -->
-                                Customer : <?=$customer?> <br>
-                                Meja : <?=$meja?>
+                                
 
-                                <a style="color: white;" id="btdelete" class="btn btn-danger btn-md">Pilih Meja</a>
+                                <!-- <a style="color: white;" id="btdelete" class="btn btn-danger btn-md">Pilih Meja</a> -->
                             </div>
                             <div class="account-wrap">
                                 <div class="account-item account-item--style2 clearfix js-item-menu">
@@ -207,6 +216,41 @@
                         </div>
                     </div>
                 </header>
+                <div class="container" style="padding-top:10px">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12">
+                            <form method="GET">
+                            <div class="overview-item" style="padding: 20px !important; background-color:white; margin-bottom: 0">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <h5>Customer : <input type="" name="cust" class="form-control" value="<?=$customer?>"></h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5>Meja : 
+                                                    <!-- <?=$meja?> -->
+                                                    <select class="form-control" name='meja'>
+                                                        <option value="0">belum dipilih</option>
+                                                        <?php foreach ($listMeja as $key): ?>
+                                                            <option value="<?=$key['id']?>"  <?=($key['id']==$_GET['meja'])?'selected':''?> ><?=$key['no_meja']?> <?=($key['status']=='active')? ' - Terpakai' : '';?></option>
+                                                        <?php endforeach ?>
+                                                    </select>        
+                                                </h5>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h5>Waiter : <input type="" name="" class="form-control" value="<?=$waiter?> " disabled readonly></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top:5px;">pilih</button>
+                            </form>
+                        </div> 
+                    </div>
+                </div>
                 <?php
                 @$page = $_GET['page'];
                 switch ($page) {
@@ -263,7 +307,7 @@
         <div class="modal-content">
             <form method="post">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="mediumModalLabel">Pesanan Anda</h3>
+                    <h3 class="modal-title" id="mediumModalLabel">Daftar Pesanan</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -345,7 +389,7 @@
                                     <td></td>
                                     <?php } else {?>
                                     <br>
-                                    <td colspan="6" class="text-center"><h3>Anda belum pernah order</h3></td>
+                                    <td colspan="6" class="text-center"><h3>Daftar Kosong</h3></td>
                                     <?php }?>
                                 </tbody>
                             </table>

@@ -1,10 +1,13 @@
 <?php
-exit();
+
     include "config/config.php";
 
     #hax - go to menu
     // header("Location: ".BASE_URL."index_waiter.php", true, 301);
-    header("Location: ".BASE_URL."menu.php", true, 301);
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+    header("Cache-Control: no-cache");
+    header("Pragma: no-cache");
+    header("Location: ".BASE_URL."login.php");
     exit();
 
     include "config/controller.php";

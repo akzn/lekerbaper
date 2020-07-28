@@ -20,7 +20,7 @@
         </div>
     </div>
     <br>
-    <a href="?page=dashboard" class="btn btn-danger float-right">Kembali ke kategori</a>
+    <a href="?page=dashboard&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-danger float-right">Kembali ke kategori</a>
     <br><br>
     <div class="row">
         <div class="col-md-12">
@@ -39,7 +39,7 @@
                         <p class="card-text" style="color: red;">Rp. <?=$dataB['harga']?></p>
                     </div>
                     <div class="col-md-4">
-                        <a href="?page=detail_menu&kategori=<?=$dataB['kategori_id']?>&kd=<?=$dataB['kd_menu']?>" class="btn btn-primary float-right">Order</a>
+                        <a href="?page=detail_menu&kategori=<?=$dataB['kategori_id']?>&kd=<?=$dataB['kd_menu']?>&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-primary float-right">Order</a>
                     </div>
                 </div>
                 

@@ -7,6 +7,7 @@
     $table = "tb_kategori";
     $data  = $db->select($table);
 
+
     /*if ($_SESSION['username']=='') {
         ?><script><?php echo("location.href = '".BASE_URL."index_waiter.php';");?></script><?php
     }*/
@@ -52,7 +53,7 @@
                             <!-- <p class="card-text" style=""><?=$data2['description']?></p> -->
                         </div>
                         <div class="col-md-4">
-                            <a href="?page=order_menu&kategori&menu&kd=<?=$data2['kd_kategori']?>" class="btn btn-primary float-right">Lihat Menu</a>
+                            <a href="?page=order_menu&kategori&menu&kd=<?=$data2['kd_kategori']?>&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-primary float-right">Lihat Menu</a>
                         </div>
                     </div>
                 </li>

@@ -67,7 +67,7 @@
                                 <i class="zmdi zmdi-view-dashboard zmdi-hc-lg"></i>Dashboard</a>
                             </li>
                             <li>
-                                <a href="index_waiter.php" target="_blank">
+                                <a href="pageWaiterOrder.php" target="_blank">
                                 <i class="zmdi zmdi-shopping-cart zmdi-hc-lg"></i>Order</a>
                             </li>
                             <li>

@@ -9,6 +9,9 @@
 	// $autokodedetailTemp = $dm->autokode("tb_detail_order_temporary", "kd_detail", "DM");
 	$authPelanggan      = $dm->AuthPelanggan($_SESSION['username']);
 	$authUser           = $dm->AuthUser($_SESSION['username']);
+	
+	$kd_order = $_GET['order'];
+	$no_meja_cus = $_GET['meja'];
 	$no_meja2           = $authPelanggan['no_meja'];
 
 	//For view keranjang
@@ -29,43 +32,85 @@
 	$sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$data_kd2'";
 	$exec  = mysqli_query($con, $sql);
 	$assoc = mysqli_fetch_assoc($exec);
+
+
+	// Cek if meja dah ada kode order
 	$no_meja = $authPelanggan['no_meja'];
 	$sql2    = "SELECT kd_order FROM tb_order WHERE no_meja='$no_meja'";
 	$exe2    = mysqli_query($con, $sql2);
 	$num2    = mysqli_num_rows($exe2);
 	$dta2    = mysqli_fetch_assoc($exe2);
-	$data_kd = $dta2['kd_order'];
+	$data_kd = $dta2['kd_order']; // Kode order
 
-	/*Button Tambah*/
-	if (isset($_POST['btnTambah'])) {
-		$nama_user     = $authUser['name'];
-		$kd_user       = $authUser['kd_user'];
-		$status_detail = "pending";
+
+
+	/*Button Tambah pesanan*/
+	/*if (isset($_POST['btnTambah'])) {
+		// $nama_user     = $authUser['name'];
+		// $kd_user       = $authUser['kd_user'];
+		$status_detail = "pesan";
 		$total         = $_POST['total'];
 		$menu_kd       = $getMenu['kd_menu'];
 		$sub_total     = $_POST['sub_total'];
 		// $sql = "SELECT * FROM tb_detail_order_temporary WHERE menu_kd='$menu_kd' AND order_kd='$data_kd'";
-		$sql = "SELECT * FROM tb_detail_order WHERE menu_kd='$menu_kd' AND order_kd='$data_kd'";
-			var_dump($sql);
+
+		// Cek apakah sudah ada kode order, 
+
+		if (!$kd_order) {
+			$autokode = $dm->autokode("tb_order", "kd_order", "TR");
+			$kd_order = $autokode;
+
+			if (!$no_meja_cus) {
+				$no_meja_cus = NULL;
+			}
+
+			$valueOrder = "'$kd_order', '$no_meja_cus', null, '$nama_user', '$kd_user', '', '$status', '$date'";
+            $response   = $dm->insert("tb_order", $valueOrder,null);
+		}
+
+		$sql = "SELECT * FROM tb_detail_order WHERE menu_kd='$menu_kd' AND order_kd='$kd_order'";
+			// var_dump($sql);
 		$exe = mysqli_query($con, $sql);
 		$num = mysqli_num_rows($exe);
 		$dta = mysqli_fetch_assoc($exe);
+
+		# Condition
 		if ($num > 0) {
+			// Jika sudah ada kode order
 			$total     = $dta['total'] + $total;
 			$sub_total = $dta['sub_total'] + $sub_total;
 			$value     = "total='$total', sub_total='$sub_total'";
-			// $response  = $dm->update("tb_detail_order_temporary", $value, "menu_kd = '$menu_kd' AND order_kd", $data_kd, "?page=dashboard");
 			$response  = $dm->update("tb_detail_order", $value, "menu_kd= '$menu_kd' AND order_kd", $data_kd, "?page=dashboard");
 		} else {
-			// $valueDetailTemp = "'$autokodedetailTemp', '$data_kd', '$kd_user', '$menu_kd', '', '$total', '$sub_total', '', '', '', '$status_detail'";
-			// $response        = $dm->insert("tb_detail_order_temporary", $valueDetailTemp, "?page=dashboard");
+			// JIka belum ada kode order
 			$valueDetail = "'$autokodedetail', '$data_kd', '$kd_user', '$menu_kd', '', '$total', '$sub_total', '', '', '', '$status_detail'";
 			var_dump($valueDetail);
 			$response    = $dm->insert("tb_detail_order", $valueDetail, "?page=dashboard");
 			$valueUp  = "status_order='belum_bayar'";
 			$response = $dm->update("tb_order", $valueUp, "kd_order", $data_kd, "?page=dashboard");
 		}
+	}*/
+
+	# btn tambah pesanan
+	if (isset($_POST['btnTambah'])) {
+		$kd_order = $_GET['order'];
+		if (!$kd_order) {
+			// Jika belum ada kode order 
+			// BUat order baru
+			$autokode = $dm->autokode("tb_order", "kd_order", "TR");
+			$date = date('Y-m-d');
+			$status_order = 'belum_beli';
+			$kd_order = $autokode;
+			$valueOrder = "'$kd_order', '1', null, 'tes', 'tes', '', '$status_order', '$date'";
+            $response   = $dm->insert("tb_order", $valueOrder,null);
+            var_dump($response);
+			echo('no kd order');
+		} else {
+			echo 'kd order'.$kd_order;
+		}
 	}
+
+
 
 
 	if (isset($_POST['kirimCatatan'])) {
@@ -216,12 +261,12 @@
 				<div class="au-breadcrumb-content">
 					<div class="au-breadcrumb-left">
 						<ul class="list-unstyled list-inline au-breadcrumb__list">
-							<li class="list-inline-item"><a href="?page=dashboard">Beranda</a></li>
+							<li class="list-inline-item"><a href="?page=dashboard&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>">Beranda</a></li>
 							<li class="list-inline-item"><span><i class="zmdi zmdi-chevron-right"></i></span></li>
 							<li class="list-inline-item"><a href="">Menu Detail</a></li>
 							<li class="list-inline-item"><span><i class="zmdi zmdi-chevron-right"></i></span></li>
 							<li class="list-inline-item">
-								<a href="?page=order_menu&kategori&menu&kd=<?=$getKategori['kd_kategori']?>"><?=$getKategori['name_kategori']?></a>
+								<a href="?page=order_menu&kategori&menu&kd=<?=$getKategori['kd_kategori']?>&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>"><?=$getKategori['name_kategori']?></a>
 							</li>
 							<li class="list-inline-item"><span><i class="zmdi zmdi-chevron-right"></i></span></li>
 							<li class="list-inline-item active">
