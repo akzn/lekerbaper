@@ -1,5 +1,6 @@
 <?php
 	$dm                 = new Resto();
+	$order                 = new Order();
 	$getMenu            = $dm->selectWhere("tb_menu", "kd_menu", $_GET['kd']);
 	$kd                 = $_GET['kd'];
 	@$getKategori       = $dm->selectWhere("tb_kategori", "kd_kategori", $_GET['kategori']);
@@ -15,7 +16,7 @@
 	$no_meja2           = $authPelanggan['no_meja'];
 
 	//For view keranjang
-	$sql3     = "SELECT kd_order FROM tb_order WHERE no_meja='$no_meja2'";
+	/*$sql3     = "SELECT kd_order FROM tb_order WHERE no_meja='$no_meja2'";
 	$exe3     = mysqli_query($con, $sql3);
 	$num3     = mysqli_num_rows($exe3);
 	$dta3     = mysqli_fetch_assoc($exe3);
@@ -23,15 +24,15 @@
 	$kduser = $authUser['kd_user'];
 	// $data = $dm->editWhere("detail_order", 'order_kd', $data_kd2, 'user_kd', $kduser);
 
-	$data = $dm->getKeranjang("tb_detail_order_temporary", 'order_kd', $data_kd2, 'user_kd', $kduser);
-
+	$data = $dm->getKeranjang("tb_detail_order", 'order_kd', $data_kd2, 'user_kd', $kduser);*/
+	
 	// var_dump($data);
 
 	//Sum total
 	// $sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order_temporary WHERE order_kd = '$data_kd2'";
-	$sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$data_kd2'";
+	/*$sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$data_kd2'";
 	$exec  = mysqli_query($con, $sql);
-	$assoc = mysqli_fetch_assoc($exec);
+	$assoc = mysqli_fetch_assoc($exec);*/
 
 
 	// Cek if meja dah ada kode order
@@ -93,44 +94,99 @@
 
 	# btn tambah pesanan
 	if (isset($_POST['btnTambah'])) {
-		$kd_order = $_GET['order'];
-		if (!$kd_order) {
-			// Jika belum ada kode order 
-			// BUat order baru
-			$autokode = $dm->autokode("tb_order", "kd_order", "TR");
-			$date = date('Y-m-d');
-			$status_order = 'belum_beli';
-			$kd_order = $autokode;
-			$valueOrder = "'$kd_order', '1', null, 'tes', 'tes', '', '$status_order', '$date'";
-            $response   = $dm->insert("tb_order", $valueOrder,null);
-            var_dump($response);
-			echo('no kd order');
+
+		//declare var for input pesanan
+		$status_detail = "pesan";
+		$kd_menu       = $getMenu['kd_menu'];
+		$harga_satuan	= $_POST['harga_satuan'];
+		$sub_total     = $_POST['sub_total'];
+		$jml_pesan         = $_POST['total'];
+
+		//JIka jumlah pesan > 0
+		if ($jml_pesan > 0) {
+
+			//jika cust atau meja masih kosong
+			if (!($_GET['meja']) || ! ($_GET['cust'])) {
+				
+				echo("<script>alert('belum input meja atau pelanggan')</script>");
+				
+			} else {
+				$kd_order = $_SESSION['kd_order'];
+
+				// Jika belum ada kode order 
+				if (!$kd_order) {
+					// BUat order baru
+					$new_kd_order = $dm->autokode("tb_order", "kd_order", "TR");
+					$date = date('Y-m-d');
+					$status_order = 'belum_beli';
+					$kd_order = $autokode;
+					$redirect     = "dashboard.php";
+					$valueOrder = "'$kd_order', '$_GET[meja]', null, '$_GET[cust]', null, '', '$status_order', '$date'";
+		            $response   = $order->new_order("tb_order", $valueOrder);
+
+		            if ($response['response']=='positive') {
+		            	//jika berhasil buat kode order
+		            	$_SESSION['kd_order'] = $autokode;
+
+		            	//insert item detail menu baru
+		            	$autokodedetail     = $dm->autokode("tb_detail_order", "kd_detail", "DM");
+		            	$valueDetail = "'$autokodedetail', '$new_kd_order', '', '$kd_menu', '', '$jml_pesan', '$sub_total', '', '', '', '$status_detail'";
+		            	$response    = $order->new_order("tb_detail_order", $valueDetail);
+
+		            }
+				} else {
+					// Jika sudah ada kode order 
+					$sql = "SELECT * FROM tb_detail_order WHERE menu_kd='$kd_menu' AND order_kd='$kd_order'";
+					$exe = mysqli_query($con, $sql);
+					$num = mysqli_num_rows($exe);
+					$dta = mysqli_fetch_assoc($exe);
+
+					// var_dump($num);exit;
+
+					if ($num > 0) {
+						// Jika menu sudah ada di pesanan, tambah
+						$jml_pesan     = $dta['total'] + $jml_pesan;
+						$sub_total = $jml_pesan * $harga_satuan;
+						$valueDetail     = "total='$jml_pesan', sub_total='$sub_total'";
+						$response  = $order->update_order("tb_detail_order", $valueDetail, "menu_kd= '$kd_menu' AND order_kd", $kd_order);
+					} else {
+						// Jika menu belum ada di pesanan, insert
+						$valueDetail = "'$autokodedetail', '$kd_order', '', '$kd_menu', '', '$jml_pesan', '$sub_total', '', '', '', '$status_detail'";
+						$response    = $order->new_order("tb_detail_order", $valueDetail);
+					}
+					// unset($_SESSION['kd_order']);
+				}
+			}
 		} else {
-			echo 'kd order'.$kd_order;
+			//JIka jumlah pesan !> 0
+			$response = array('response' => 'negative', 'alert' => 'Jumlah pesan kurang dari 1');
 		}
 	}
 
 
 
 
-	if (isset($_POST['kirimCatatan'])) {
-	$keterangan = $_POST['keterangan'];
-	if ($keterangan == "") {
-	$response = ['response' => 'negative', 'alert' => 'Lengkapi Field'];
-	} else {
-	$value    = "keterangan='$keterangan', status_keterangan='N'";
-	// $response = $dm->update("tb_detail_order_temporary", $value, "order_kd", $data_kd, "?page=detail_menu&kategori=$kate&kd=$kd");
-	$response = $dm->update("tb_detail_order", $value, "order_kd", $data_kd, "?page=detail_menu&kategori=$kate&kd=$kd");
-	}
-	}
+	// if (isset($_POST['kirimCatatan'])) {
+	// $keterangan = $_POST['keterangan'];
+	// if ($keterangan == "") {
+	// $response = ['response' => 'negative', 'alert' => 'Lengkapi Field'];
+	// } else {
+	// $value    = "keterangan='$keterangan', status_keterangan='N'";
+	// // $response = $dm->update("tb_detail_order_temporary", $value, "order_kd", $data_kd, "?page=detail_menu&kategori=$kate&kd=$kd");
+	// $response = $dm->update("tb_detail_order", $value, "order_kd", $data_kd, "?page=detail_menu&kategori=$kate&kd=$kd");
+	// }
+	// }
+
+	# Hapus item
 	if (isset($_GET['hapus2'])) {
-	$kd       = $_GET['kd'];
-	$where    = "kd_detail";
-	// $response = $dm->delete("tb_detail_order_temporary", $where, $kd, "?page=dashboard");
-	$response = $dm->delete("tb_detail_order", $where, $kd, "?page=dashboard");
+		$kd       = $_GET['kd'];
+		$where    = "kd_detail";
+		// $response = $dm->delete("tb_detail_order_temporary", $where, $kd, "?page=dashboard");
+		$response = $dm->delete("tb_detail_order", $where, $kd, "?page=dashboard");
 	}
+
 ?>
-<div class="modal fade" id="keranjangModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="keranjangModal" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<form method="post">
@@ -248,12 +304,12 @@
 					<?php
 					}
 					?>
-					<button name="kirimCatatan" class="btn btn-primary">Kirim catatan</button>
+					<button name="kirimCatatan" class="btn btn-primary">Selesaikan Pesanan</button>
 				</div>
 			</form>
 		</div>
 	</div>
-</div>
+</div> -->
 <div class="section__content section__content--p30 m-t-40">
 	<div class="container">
 		<div class="row">
@@ -283,6 +339,7 @@
 						</button>
 					</div>
 				</div>
+				<a href="?page=dashboard&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-danger float-right">Kembali ke kategori</a>
 			</div>
 		</div>
 	</div>
@@ -332,7 +389,7 @@
 												</div> -->
 												<div class="form-group">
 													<label for="">Harga</label>
-													<input class="form-control" id="hargas" type="text"  value="<?=$getMenu['harga']?>" hidden>
+													<input class="form-control" id="hargas" type="text"  name="harga_satuan" value="<?=$getMenu['harga']?>" hidden>
 													<input class="form-control"  type="text" name="harga" value="<?=number_format($getMenu['harga'],2,",",".");?>" disabled>
 												</div>
 												<div class="form-group">

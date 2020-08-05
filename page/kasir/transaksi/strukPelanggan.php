@@ -1,9 +1,11 @@
 <?php
 $sp          = new Resto();
+$order = new Order();
 $kd          = $_GET['kd'];
-$dataDetail  = $sp->edit("detail_order", "transaksi_kd", $kd);
-$jumlah_menu = $sp->selectSumWhere("detail_order", "total", "transaksi_kd='$kd'");
-$total       = $sp->selectSumWhere("detail_order", "sub_total", "transaksi_kd='$kd'");
+// $dataDetail  = $sp->edit("tb_detail_order", "transaksi_kd", $kd);
+$dataDetail = $order->getOrderDataByTrx($kd);
+$jumlah_menu = $sp->selectSumWhere("tb_detail_order", "total", "transaksi_kd='$kd'");
+$total       = $sp->selectSumWhere("tb_detail_order", "sub_total", "transaksi_kd='$kd'");
 ?>
 <style>
 	.col-sm-8{
@@ -50,7 +52,7 @@ $total       = $sp->selectSumWhere("detail_order", "sub_total", "transaksi_kd='$
 							<div class="table-responsive">
 								<table class="table table-striped table-bordered" width="80%">
 									<tr>
-										<td>Kode Antrian</td>
+										<td>Kode Menu</td>
 										<td>Nama Menu</td>
 										<td>Harga Satuan</td>
 										<td>Jumlah</td>

@@ -23,6 +23,7 @@
             if ($response['response'] == "positive") {
                 $_SESSION['username'] = $_POST['username'];
                 $_SESSION['level']    = $response['level'];
+                $_SESSION['kd_user'] = $response['kd_user'];
                 if ($response['level'] == "Admin") {
                 $response = $lg->redirect("pageAdmin.php");
                 } else if ($response['level'] == "Waiter") {

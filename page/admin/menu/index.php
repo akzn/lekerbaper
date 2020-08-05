@@ -1,6 +1,8 @@
 <?php
     $kg   = new resto();
-    $data = $kg->select("tb_menu");
+    $list = new Listing();
+    // $data = $kg->select("tb_menu");
+    $data = $list->getMenuList();
     if (isset($_GET['delete'])) {
     $response = $kg->delete("tb_menu", "kd_menu", $_GET['kd'], "?page=indexMenu");
     }
@@ -47,6 +49,7 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
+                                            <th>Kategori</th>
                                             <th>Nama</th>
                                             <th>Harga</th>
                                             <th>Aksi</th>
@@ -59,6 +62,7 @@
                                         ?>
                                         <tr class="text-justify">
                                             <td><?=$no;?></td>
+                                            <td><?=$dataB['name_kategori']?></td>
                                             <td><?=$dataB['name_menu']?></td>
                                             <td>Rp. <?=$dataB['harga']?></td>
                                             <td class="text-center">

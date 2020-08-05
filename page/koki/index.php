@@ -1,6 +1,8 @@
 <?php
-$ko   = new Resto();
-$data = $ko->selectOrderDate2("tb_order", "waktu");
+// $ko   = new Resto();
+// $data = $ko->selectOrderDate2("tb_order", "waktu");
+$koki = new Koki();
+$data  = $koki->getJob();
 ?>
 <section class="au-breadcrumb m-t-75">
     <div class="section__content section__content--p30">
@@ -41,7 +43,7 @@ $data = $ko->selectOrderDate2("tb_order", "waktu");
                                             <th>Kode Order</th>
                                             <th>No Meja</th>
                                             <th>Nama User</th>
-                                            <th>Tanggal</th>
+                                            <th>Waktu Pesan</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -55,7 +57,7 @@ $data = $ko->selectOrderDate2("tb_order", "waktu");
                                             <td><a href="?page=detail_order&order&kd=<?=$db['kd_order']?>"><?=$db['kd_order']?></a></td>
                                             <td><?=$db['no_meja']?></td>
                                             <td><?=$db['nama_user']?></td>
-                                            <td><?=$db['tanggal']?></td>
+                                            <td><?=$db['waktu']?></td>
                                             <td>
                                                 <a href="?page=detail_order&order&kd=<?=$db['kd_order']?>" class="btn btn-sm btn-danger">Edit status</a>
                                             </td>

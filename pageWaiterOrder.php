@@ -2,13 +2,25 @@
     include "config/config.php";
     include "config/controller.php";
     include "controller/meja.php";
+    include "controller/order.php";
     
     $id = new Resto();
     $classMeja = new Meja();
+
+    $order = new Order();
+
     session_start();
     $auth     = $id->AuthUser($_SESSION['username']);
     $auth2    = $id->AuthPelanggan($_SESSION['username']);
     $response = $id->sessionCheck();
+
+    # check if session order is intact
+    if ($_SESSION['kd_order']) {
+        # get meja and customer data
+        $getData = $id->selectWhere('tb_order','kd_order',$_SESSION['kd_order']);
+        $_GET['meja'] = $getData['no_meja'];
+        $_GET['cust'] = $getData['nama_user'];
+     } 
 
     # Nama pelanggan dan meja 
     $waiter = 'Masih Kosong';
@@ -85,8 +97,8 @@
     }
 
 
-    //For view keranjang
-    $dm                 = new Resto();
+    # Keranjang
+    /*$dm                 = new Resto();
     $authPelanggan      = $dm->AuthPelanggan($_SESSION['username']);
     $authUser           = $dm->AuthUser($_SESSION['username']);
     $no_meja2           = $authPelanggan['no_meja'];
@@ -99,11 +111,15 @@
     $kduser = $authUser['kd_user'];
     // $data = $dm->editWhere("detail_order", 'order_kd', $data_kd2, 'user_kd', $kduser);
 
-    $data_keranjang = $dm->getKeranjang("tb_detail_order_temporary", 'order_kd', $data_kd2, 'user_kd', $kduser);
+    $data_keranjang = $dm->getKeranjang("tb_detail_order_temporary", 'order_kd', $data_kd2, 'user_kd', $kduser);*/
+
+    if ($_SESSION['kd_order']) {
+        $data_keranjang = $order->getKeranjang("tb_detail_order", 'order_kd', $_SESSION['kd_order']);
+    }
 
     //Sum total
     // $sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order_temporary WHERE order_kd = '$data_kd2'";
-    $sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$data_kd2'";
+    $sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$_SESSION[kd_order]'";
     $exec  = mysqli_query($con, $sql);
     $assoc = mysqli_fetch_assoc($exec);
     $no_meja = $authPelanggan['no_meja'];
@@ -113,6 +129,22 @@
     $dta2    = mysqli_fetch_assoc($exe2);
     $data_kd = $dta2['kd_order'];
 
+
+    # Selesai Pesan -> lanjut ke koki
+    if (isset($_POST['selesaiPesan'])) {
+        if ($_SESSION['kd_order']) {
+            # JIka ada sesi kode order
+            $valueUp  = "status_order='belum_bayar'";
+            $response = $id->update("tb_order", $valueUp, "kd_order", $_SESSION['kd_order'], "?page=dashboard");
+            if ($response['response']=='positive') {
+                $value  = "status='active'";
+                $close_meja = $id->update("tb_meja", $value, "id", $_GET['meja'], "?page=dashboard");
+                unset($_SESSION['kd_order']);
+            }
+        } else {
+            $response = array('response' => 'negative', 'alert' => 'Belum memesan');
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -163,6 +195,9 @@
                                 
 
                                 <!-- <a style="color: white;" id="btdelete" class="btn btn-danger btn-md">Pilih Meja</a> -->
+                                <?php if ($_SESSION['kd_order']): ?>
+                                    <a style="color: white;" class="btn btn-danger btn-md" disabled>Kode Order : <?=$_SESSION['kd_order']?></a>
+                                <?php endif ?>
                             </div>
                             <div class="account-wrap">
                                 <div class="account-item account-item--style2 clearfix js-item-menu">
@@ -233,7 +268,12 @@
                                                     <select class="form-control" name='meja'>
                                                         <option value="0">belum dipilih</option>
                                                         <?php foreach ($listMeja as $key): ?>
-                                                            <option value="<?=$key['id']?>"  <?=($key['id']==$_GET['meja'])?'selected':''?> ><?=$key['no_meja']?> <?=($key['status']=='active')? ' - Terpakai' : '';?></option>
+                                                            <option value="<?=$key['id']?>"  
+                                                                <?=($key['id']==$_GET['meja'])?'selected':''?> 
+                                                                <?=($key['status']=='active')? 'disabled' : '';?>
+                                                            >
+                                                                <?=$key['no_meja']?> <?=($key['status']=='active')? ' - Terpakai' : '';?>    
+                                                            </option>
                                                         <?php endforeach ?>
                                                     </select>        
                                                 </h5>
@@ -308,7 +348,7 @@
             <form method="post">
                 <div class="modal-header">
                     <h3 class="modal-title" id="mediumModalLabel">Daftar Pesanan</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -360,26 +400,30 @@
                                             ?>
                                         </td>
                                         <td>
-                                            <button id="bthapus2<?=$no;?>" class="btn btn-danger btn-sm">Batal Beli</button>
+                                            <button id="bthapus2<?=$no;?>" class="btn btn-danger btn-sm">hapus</button>
                                         </td>
                                     </tr>
                                     <script src="../../vendor/jquery-3.2.1.min.js"></script>
                                     <script>
-                                    $("#bthapus2<?php echo $no; ?>").click(function(){
-                                    swal({
-                                    title: "Hapus",
-                                    text: "Yakin Hapus?",
-                                    type: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonText: "Yes",
-                                    cancelButtonText: "Cancel",
-                                    closeOnConfirm: false,
-                                    closeOnCancel: true
-                                    },function(isConfirm){
-                                    if (isConfirm) {
-                                    window.location.href="?page=detail_menu&hapus2&kd=<?=$datas['kd_detail'];?>";
-                                    }
-                                    })
+                                    $("#bthapus2<?php echo $no; ?>").click(function(e){
+
+                                        e.preventDefault();
+                                        e.stopPropagation();
+
+                                        swal({
+                                            title: "Hapus",
+                                            text: "Yakin Hapus?",
+                                            type: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Yes",
+                                            cancelButtonText: "Cancel",
+                                            closeOnConfirm: false,
+                                            closeOnCancel: true
+                                        },function(isConfirm){
+                                        if (isConfirm) {
+                                            window.location.href="?page=detail_menu&hapus2&kd=<?=$datas['kd_detail'];?>";
+                                            }
+                                        })
                                     })
                                     </script>
                                     <?php $no++;}?>
@@ -420,7 +464,10 @@
                     <?php
                     }
                     ?>
-                    <button name="kirimCatatan" class="btn btn-primary">Kirim catatan</button>
+                    <!-- <button name="kirimCatatan" class="btn btn-primary">Selesaikan Pesanan</button> -->
+                    <form method="POST">
+                        <button name="selesaiPesan" class="btn btn-primary">Selesaikan Pesanan</button>
+                    </form>
                 </div>
             </form>
         </div>

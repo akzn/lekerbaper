@@ -1,26 +1,41 @@
 <?php
 $do       = new Resto();
+$koki = new Koki();
 $kd       = $_GET['kd'];
-$data     = $do->edit("detail_order", "order_kd", $kd);
-$data2    = $do->selectWhere("tb_detail_order_temporary", "kd_detail", @$_GET['kd_detail']);
-$data3    = $do->selectWhere("tb_detail_order_temporary", "order_kd", $kd);
-$dataKode = $do->selectWhere("tb_detail_order_temporary", "menu_kd", @$_GET['kd_menu']);
+// $data     = $do->edit("tb_detail_order", "order_kd", $kd);
+$data     = $koki->getJobDetail($kd);
+
+# Get meja
+if ($kd) {
+    # get meja and customer data
+    $getData = $do->selectWhere('tb_order','kd_order',$kd);
+    $no_meja = $getData['no_meja'];
+}
+
+
+$data2    = $do->selectWhere("tb_detail_order", "kd_detail", @$_GET['kd_detail']);
+$data3    = $do->selectWhere("tb_detail_order", "order_kd", $kd);
+$dataKode = $do->selectWhere("tb_detail_order", "menu_kd", @$_GET['kd_menu']);
 $dk       = $dataKode['kd_detail'];
+
 if (isset($_POST['btnUpdate'])) {
-$status   = $_POST['status'];
-$redirect = "?page=detail_order&order&kd=$kd";
-if ($status == "") {
-$response = ['response' => 'negative', 'alert' => 'Lengkapi Field'];
-} else {
-$value    = "status_detail='$status'";
-$response = $do->update("tb_detail_order_temporary", $value, "kd_detail", $dk, $redirect);
-$response = $do->update("tb_detail_order", $value, "kd_detail", $_GET['kd_detail'], $redirect);
+    $status   = $_POST['status'];
+    $kd_detail = $_POST['kd_detail'];
+    $redirect = "?page=detail_order&order&kd=$kd";
+
+    if ($status == "") {
+        $response = ['response' => 'negative', 'alert' => 'Lengkapi Field'];
+    } else {
+        $value    = "status_detail='$status'";
+        $response = $do->update("tb_detail_order", $value, "kd_detail", $kd_detail, $redirect);
+        // $response = $do->update("tb_detail_order", $value, "kd_detail", $_GET['kd_detail'], $redirect);
+    }
 }
-}
+
 if (isset($_POST['btnKonfirm'])) {
 $redirect = "?page=detail_order&order&kd=$kd";
 $value    = "status_keterangan='S'";
-$response = $do->update("tb_detail_order_temporary", $value, "order_kd", $kd, $redirect);
+$response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
 $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
 }
 ?>
@@ -51,7 +66,7 @@ $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <div class="card">
                         <form method="post">
                             <div class="card-header">Edit Status Detail</div>
@@ -74,9 +89,29 @@ $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
                             </div>
                         </form>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-md-9">
                     <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Kode Order</label>
+                                        <input type="" name="" class="form-control"  value="<?=$_GET['kd']?>" disabled readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                     <div class="form-group">
+                                        <label>Meja</label>
+                                        <input type="" name="" class="form-control"  value="<?=$no_meja?>" disabled readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                           
+                        </div>
+                    </div>
+                    <!-- <div class="card">
                         <form method="post">
                             <div class="card-header">Catatan Pelanggan</div>
                             <div class="card-body">
@@ -103,7 +138,7 @@ $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
                                 $response = ['response' => 'negative', 'alert' => 'Alasan belum diinput'];
                                 } else {
                                 $value    = "status_keterangan='T', balasan_keterangan='$balasan'";
-                                $response = $do->update("tb_detail_order_temporary", $value, "order_kd", $kd, $redirect);
+                                $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
                                 $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
                                 }
                                 }
@@ -111,7 +146,7 @@ $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
                                 ?>
                             </div>
                         </form>
-                    </div>
+                    </div> -->
                     <div class="card">
                         <div class="card-body">
                             <form method="post">
@@ -119,21 +154,37 @@ $response = $do->update("tb_detail_order", $value, "order_kd", $kd, $redirect);
                                     <table class="table table-bordered table-striped" id="example">
                                         <thead>
                                             <tr>
-                                                <th>No Meja</th>
+                                                <th width="25">No</th>
                                                 <th>Nama Menu</th>
                                                 <th>Status Detail</th>
-                                                <th>Aksi</th>
+                                                <!-- <th>Aksi</th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
+                                            <?php $start=0;
                                             foreach ($data as $db) {
+                                               
                                             ?>
                                             <tr>
-                                                <td><?=$db['no_meja']?></td>
+                                                <td><?=++$start?></td>
                                                 <td><?=$db['name_menu']?></td>
-                                                <td><?=$db['status_detail']?></td>
-                                                <td><a class="btn btn-danger btn-sm" href="?page=detail_order&order&kd=<?=$_GET['kd']?>&kd_detail=<?=$db['kd_detail']?>&kd_menu=<?=$db['menu_kd']?>">Edit</a></td>
+                                                <!-- <td><?=$db['status_detail']?></td> -->
+                                                <td>
+                                                    <form method="POST" action="?page=detail_order&order&kd=<?=$_GET['kd']?>&kd_detail=<?=$db['kd_detail']?>&kd_menu=<?=$db['menu_kd']?>">
+                                                        <input type="hidden" name="kd_detail" value="<?=$db['kd_detail']?>">
+                                                    <div class="input-group">
+                                                      <select name="status" class="form-control">
+                                                            <option value="pending" <?=($db['status_detail']=='pending')?'selected':'';?> >pending</option>
+                                                            <option value="dimasak" <?=($db['status_detail']=='dimasak')?'selected':'';?>>dimasak</option>
+                                                            <option value="siap" <?=($db['status_detail']=='siap')?'selected':'';?>>siap</option>
+                                                            <option value="diambil" <?=($db['status_detail']=='diambil')?'selected':'';?>>diambil</option>
+                                                        </select>        
+                                                      <span class="input-group-btn" style="padding-left: 5px">
+                                                        <button name="btnUpdate" class="btn btn-danger btn-sm" >Ubah</button>
+                                                      </span>
+                                                    </div>
+                                                    </form>
+                                                </td>
                                             </tr>
                                             <?php }?>
                                         </tbody>

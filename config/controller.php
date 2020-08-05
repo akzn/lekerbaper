@@ -113,7 +113,7 @@
 	        $assoc = mysqli_fetch_assoc($query);
 	        if ($rows > 0) {
 	            if (base64_decode($assoc['password']) == $password) {
-	                return ['response' => 'positive', 'alert' => 'Berhasil Login', 'level' => $assoc['level']];
+	                return ['response' => 'positive', 'alert' => 'Berhasil Login', 'level' => $assoc['level'], 'kd_user' => $assoc['kd_user']];
 	            } else {
 	                return ['response' => 'negative', 'alert' => 'Password Salah'];
 	            }
@@ -322,18 +322,6 @@
 	        return $data;
 	    }
 
-	    public function getKeranjang($table, $where, $whereValues, $where2, $whereValues2)
-	    {
-	        global $con;
-	        // $sql   = "SELECT * FROM $table Join $table2 On WHERE $where = '$whereValues' AND $where2 = '$whereValues2'";
-	        $sql 	= " SELECT * from tb_detail_order t1 join tb_menu t2 on t1.menu_kd = t2.kd_menu WHERE $where = '$whereValues' AND $where2 = '$whereValues2'";
-	        $query = mysqli_query($con, $sql);
-	        $data  = [];
-	        while ($bigData = mysqli_fetch_assoc($query)) {
-	            $data[] = $bigData;
-	        }
-	        return $data;
-	    }
 
 	    public function selectOrderDate($table, $where, $whereValues, $field){
 	    	global $con;

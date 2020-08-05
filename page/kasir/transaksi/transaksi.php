@@ -8,32 +8,36 @@ $dataDetail = $tr->selectWhere("detail_order", "order_kd", $kd_order);
 $sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$kd_order'";
 $exec  = mysqli_query($con, $sql);
 $assoc = mysqli_fetch_assoc($exec);
-if (isset($_POST['getSimpan'])) {
-$kd_transaksi = $_POST['kode_transaksi'];
-$kd_user      = $dataDetail['user_kd'];
-$total        = $_POST['total_harga'];
-$bayar        = $_POST['bayar'];
-$kembalian    = $_POST['kembalian'];
-if ($total == "" || $kembalian == "") {
-$response = ['response' => 'negative', 'alert' => 'Bayar Dahulu'];
-} else {
-if ($bayar < $total) {
-$response = ['response' => 'negative', 'alert' => 'Uang kurang'];
-} else {
-$date     = date("Y-m-d");
-$value    = "'$kd_transaksi', '$kd_order', '$kd_user', '$total', '$date', null";
-$response = $tr->insert("tb_transaksi", $value, "?page=struk_transaksi&kd=$autokode");
-$valueUp  = "status_order='selesai_pembayaran'";
-$response = $tr->update("tb_order", $valueUp, "kd_order", $kd_order, "?page=struk_transaksi&kd=$autokode");
-$valueKd  = "transaksi_kd='$kd_transaksi'";
-$response = $tr->update('tb_detail_order', $valueKd, "order_kd", $kd_order, "?page=struk_transaksi&kd=$autokode");
-$response = $tr->update('tb_detail_order', $valueKd, "order_kd", $kd_order, "?page=struk_transaksi&kd=$autokode");
 
-$status_meja = "non-active";
-$valueMeja   = "user_kd='', status='$status_meja'";
-$response    = $tr->update("tb_meja", $valueMeja, "no_meja", $_GET['kd_meja'], "?page=struk_transaksi&kd=$autokode");
-}
-}
+if (isset($_POST['getSimpan'])) {
+    $kd_transaksi = $_POST['kode_transaksi'];
+    // $kd_user      = $dataDetail['user_kd'];
+    $kd_user = $_SESSION['kd_user'];
+    $total        = $_POST['total_harga'];
+    $bayar        = $_POST['bayar'];
+    $kembalian    = $_POST['kembalian'];
+
+    if ($total == "" || $kembalian == "") {
+        $response = ['response' => 'negative', 'alert' => 'Bayar Dahulu'];
+    } else {
+        if ($bayar < $total) {
+            $response = ['response' => 'negative', 'alert' => 'Uang kurang'];
+        } else {
+            $date     = date("Y-m-d");
+            $value    = "'$kd_transaksi', '$kd_order', '$kd_user', '$total', '$date', null";
+            $response = $tr->insert("tb_transaksi", $value, "?page=struk_transaksi&kd=$autokode");
+
+            $valueUp  = "status_order='selesai_pembayaran'";
+            $response = $tr->update("tb_order", $valueUp, "kd_order", $kd_order, "?page=struk_transaksi&kd=$autokode");
+            $valueKd  = "transaksi_kd='$kd_transaksi'";
+            $response = $tr->update('tb_detail_order', $valueKd, "order_kd", $kd_order, "?page=struk_transaksi&kd=$autokode");
+            $response = $tr->update('tb_detail_order', $valueKd, "order_kd", $kd_order, "?page=struk_transaksi&kd=$autokode");
+
+            $status_meja = "non-active";
+            $valueMeja   = "user_kd='', status='$status_meja'";
+            $response    = $tr->update("tb_meja", $valueMeja, "no_meja", $_GET['kd_meja'], "?page=struk_transaksi&kd=$autokode");
+        }
+    }
 }
 ?>
 <div class="main-content">

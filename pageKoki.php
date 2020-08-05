@@ -1,5 +1,6 @@
 <?php
     include "config/controller.php";
+    include "controller/koki.php";
     $function = new resto();
     session_start();
     $auth = $function->AuthUser($_SESSION['username']);

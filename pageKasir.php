@@ -1,7 +1,9 @@
 <?php
 include "config/controller.php";
+include "controller/order.php";
 $function = new resto();
 session_start();
+// var_dump($_SESSION);
 $auth = $function->AuthUser($_SESSION['username']);
 $response = $function->sessionCheck();
 if ($response == "false") {
