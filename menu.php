@@ -10,17 +10,37 @@
     $order = new Order();
 
     session_start();
+
+    if (!$_SESSION['kd_pelanggan']) {
+        header("location:".BASE_URL.'login.php');
+    }
+
     $auth     = $id->AuthUser($_SESSION['username']);
     $auth2    = $id->AuthPelanggan($_SESSION['username']);
     $response = $id->sessionCheck();
 
     # check if session order is intact
-    if ($_SESSION['kd_order']) {
-        # get meja and customer data
-        $getData = $id->selectWhere('tb_order','kd_order',$_SESSION['kd_order']);
-        $_GET['meja'] = $getData['no_meja'];
-        $_GET['cust'] = $getData['nama_user'];
-     } 
+    // if ($_SESSION['kd_order']) {
+    //     # get meja and customer data
+    //     $getData = $id->selectWhere('tb_order','kd_order',$_SESSION['kd_order']);
+    //     $_GET['meja'] = $getData['no_meja'];
+    //     $_GET['cust'] = $getData['nama_user'];
+    //  } 
+
+
+
+    if ($_SESSION['kd_pelanggan']) {
+        $get_order = $order->getUnfinishedOrderByPelanggan($_SESSION['kd_pelanggan']);
+        // var_dump($get_order);
+        $orderData = $get_order[0];
+        if ($get_order) {
+            $_GET['meja'] = $orderData['no_meja'];
+            $_GET['cust'] = $orderData['nama_user'];
+            $_GET['kd_order'] = $orderData['kd_order'];
+            $_SESSION['kd_order']=$orderData['kd_order'];
+        } 
+    }
+
 
     # Nama pelanggan dan meja 
     $waiter = 'Masih Kosong';
@@ -32,6 +52,9 @@
     if ($_GET['cust']) {
         $customer = $_GET['cust'];
     }
+
+    /*var_dump($_GET['cust']);
+    echo('asd');*/
 
     $listMeja = $classMeja->getMeja();
     // var_dump($listMeja);
@@ -139,7 +162,8 @@
             if ($response['response']=='positive') {
                 $value  = "status='active'";
                 $close_meja = $id->update("tb_meja", $value, "id", $_GET['meja'], "?page=dashboard");
-                unset($_SESSION['kd_order']);
+                // unset($_SESSION['kd_order']);
+                session_destroy();
             }
         } else {
             $response = array('response' => 'negative', 'alert' => 'Belum memesan');
@@ -251,7 +275,7 @@
                         </div>
                     </div>
                 </header>
-                <div class="container" style="padding-top:10px">
+                <div class="container section-header" style="padding-top:10px">
                     <div class="row">
                         <div class="col-sm-12 col-lg-12">
                             <form method="GET">
@@ -260,7 +284,7 @@
                                     <div class="overview-box clearfix">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <h5>Customer : <input type="" name="cust" class="form-control" value="<?=$customer?>"></h5>
+                                                <h5>Customer : <input type="" name="cust" class="form-control" value="<?=$customer?>"  readonly></h5>
                                             </div>
                                             <div class="col-md-4">
                                                 <h5>Meja : 
@@ -270,7 +294,7 @@
                                                         <?php foreach ($listMeja as $key): ?>
                                                             <option value="<?=$key['id']?>"  
                                                                 <?=($key['id']==$_GET['meja'])?'selected':''?> 
-                                                                <?php #($key['status']=='active')? 'disabled' : '';?>
+                                                                <?=($key['status']=='active')? 'disabled' : '';?>
                                                             >
                                                                 <?=$key['no_meja']?> <?=($key['status']=='active')? ' - Terpakai' : '';?>    
                                                             </option>
@@ -278,7 +302,7 @@
                                                     </select>        
                                                 </h5>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 d-none">
                                                 <h5>Waiter : <input type="" name="" class="form-control" value="<?=$waiter?> " disabled readonly></h5>
                                             </div>
                                         </div>
@@ -368,6 +392,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
+                                    if ($data_keranjang) {
                                     if (count($data_keranjang) > 0) {
                                     $no = 1;
                                     foreach ($data_keranjang as $datas) {
@@ -432,8 +457,11 @@
                                     <td></td>
                                     <td></td>
                                     <?php } else {?>
-                                    <br>
-                                    <td colspan="6" class="text-center"><h3>Daftar Kosong</h3></td>
+                                    <!-- <br> -->
+                                    <!-- <td colspan="6" class="text-center"><h3>Daftar Kosong</h3></td>  -->
+                                    <?php }?>
+                                    <?php } else {?>
+                                        <td colspan="6" class="text-center"><h3>Daftar Kosong</h3></td>
                                     <?php }?>
                                 </tbody>
                             </table>

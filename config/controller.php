@@ -123,6 +123,31 @@
 	        }
 	    }
 
+	    public function loginCustomer($username,$password){
+	    	global $con;
+
+	        $sql   = "SELECT * FROM tb_pelanggan WHERE username ='$username'";
+	        $query = mysqli_query($con, $sql);
+	        $rows  = mysqli_num_rows($query);
+	        $assoc = mysqli_fetch_assoc($query);
+	        if ($rows > 0) {
+	            if (base64_decode($assoc['password']) == $password) {
+	                return [
+	                	'response' => 'positive', 
+	                	'alert' => 'Berhasil Login', 
+	                	'level' => $assoc['level'], 
+	                	'kd_pelanggan' => $assoc['kd_pelanggan'],
+	                	'nama_pelanggan' => $assoc['name_pelanggan']
+	            	];
+	            } else {
+	                return ['response' => 'negative', 'alert' => 'Password Salah'];
+	            }
+	        } else {
+
+	            return ['response' => 'negative', 'alert' => 'Username atau Password Salah'];
+	        }
+	    }
+
 	    public function register($kd_user, $name, $email, $username, $password, $confirm, $level, $redirect)
 	    {
 	    	global $con;
@@ -167,6 +192,53 @@
 
     	}
 
+		public function registerCustomer($kd_user, $name, $email, $username, $password, $confirm, $redirect)
+	    {
+	    	global $con;
+	        global $rg;
+
+	        $sql   = "SELECT * FROM tb_pelanggan WHERE username = '$username'";
+	        $query = mysqli_query($con, $sql);
+
+	        $rows = mysqli_num_rows($query);
+
+	        if (strlen($username) < 6) {
+	            return ['response' => 'negative', 'alert' => 'username minimal 6 Huruf'];
+	        }
+
+	        if ($rows == 0) {
+
+	            $name = htmlspecialchars($name);
+
+	            $username = strtolower(htmlspecialchars($username));
+	            $password = htmlspecialchars($password);
+	            $confirm  = htmlspecialchars($confirm);
+
+	            if ($password == $confirm) {
+	                $password = base64_encode($password);
+	                $sql      = "INSERT INTO tb_pelanggan(kd_pelanggan,name_pelanggan,email,username,password) VALUES('$kd_user','$name','$email','$username','$password')";
+	                $query    = mysqli_query($con, $sql);
+	                if ($query) {
+	                    return ['response' => 'positive', 'alert' => 'Registrasi Berhasil', 'redirect' => $redirect];
+	                } else {
+	                	$err = mysqli_error($con);
+	                	// var_dump($err);
+	                	$err = 'Register error';
+	                    return ['response' => 'negative', 'alert' => $err];
+	                }
+	            } else {
+
+	                return ['response' => 'negative', 'alert' => 'Password Tidak Cocok'];
+	            }
+
+	        } else if ($rows == 1) {
+
+	            return ['response' => 'negative', 'alert' => 'Username telah digunakan'];
+	        }
+
+    	}    	
+
+    	#should be unused
     	public function register_pelanggan($kd_user, $name, $email, $username, $password, $level, $redirect)
 	    {
 

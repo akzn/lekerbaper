@@ -11,6 +11,7 @@
 			if($query){
 				return ['response'=>'positive', 'alert'=>'Berhasil Menambahkan Data'];
 			}else{
+				var_dump(mysqli_error($con));
 				return ['response'=>'negative', 'alert'=>'Gagal Menambahkan Data'];
 			}
 		}
@@ -54,6 +55,25 @@
 						  JOIN tb_order ON `tb_detail_order`.`order_kd` = tb_order.`kd_order`
 						  JOIN tb_menu ON `tb_detail_order`.`menu_kd` = tb_menu.`kd_menu`
 						WHERE transaksi_kd = '$kd_trx'";
+	        $query = mysqli_query($con, $sql);
+	        $data  = [];
+	        while ($bigData = mysqli_fetch_assoc($query)) {
+	            $data[] = $bigData;
+	        }
+	        return $data;
+	    }
+
+	    public function getUnfinishedOrderByPelanggan($kd_pelanggan){
+	    	global $con;
+	        $sql   = "SELECT
+						  *
+						FROM
+						  tb_order
+						WHERE
+							kd_pelanggan = '$kd_pelanggan' 
+						And 
+							(status_order = 'belum_beli' or status_order = 'belum_bayar')
+						";
 	        $query = mysqli_query($con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {

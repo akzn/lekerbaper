@@ -1,10 +1,12 @@
 <?php
+    include "config/config.php";
     include "config/controller.php";
+    $header_title = 'Halaman Login';
     session_start();
     $lg = new Resto();
     if ($lg->sessionCheck() == "true") {
     if (@$_SESSION['level'] == "Admin") {
-    header("location:pageAdmin.php");
+    header("location:pageAdmins.php");
     } else if (@$_SESSION['level'] == "Waiter") {
     header("location:pageWaiter.php");
     } else if (@$_SESSION['level'] == "Kasir") {
@@ -19,61 +21,87 @@
         $username = strtolower($_POST['username']); // mengambil value username dan memaksa menjadi huruf kecil
         $password = $_POST['password']; // mengambil value password
         // menggunakan function login yang ada di controller
-        if ($response = $lg->login($username, $password)) {
-            if ($response['response'] == "positive") {
-                $_SESSION['username'] = $_POST['username'];
-                $_SESSION['level']    = $response['level'];
-                $_SESSION['kd_user'] = $response['kd_user'];
-                if ($response['level'] == "Admin") {
-                $response = $lg->redirect("pageAdmin.php");
-                } else if ($response['level'] == "Waiter") {
-                $response = $lg->redirect("pageWaiter.php");
-                } else if ($response['level'] == "Kasir") {
-                $response = $lg->redirect("pageKasir.php");
-                } else if ($response['level'] == "Owner") {
-                $response = $lg->redirect("pageOwner.php");
-                } else if ($response['level'] == "Koki") {
-                $response = $lg->redirect("pageKoki.php");
+
+        if ($_GET['page']=='crew') {
+            // Jika Login Crew
+            if ($response = $lg->login($username, $password)) {
+                if ($response['response'] == "positive") {
+                    $_SESSION['username'] = $_POST['username'];
+                    $_SESSION['level']    = $response['level'];
+                    $_SESSION['kd_user'] = $response['kd_user'];
+                    if ($response['level'] == "Admin") {
+                    $response = $lg->redirect("pageAdmin.php");
+                    } else if ($response['level'] == "Waiter") {
+                    $response = $lg->redirect("pageWaiter.php");
+                    } else if ($response['level'] == "Kasir") {
+                    $response = $lg->redirect("pageKasir.php");
+                    } else if ($response['level'] == "Owner") {
+                    $response = $lg->redirect("pageOwner.php");
+                    } else if ($response['level'] == "Koki") {
+                    $response = $lg->redirect("pageKoki.php");
+                    }
+                }
+            }
+        } else {
+            // JIka login customer
+            if ($response = $lg->loginCustomer($username, $password)) {
+                if ($response['response'] == "positive") {
+                    $_SESSION['nama_pelanggan'] = $response['nama_pelanggan'];
+                    $_SESSION['kd_pelanggan'] = $response['kd_pelanggan'];
+                    $red = "menu.php?cust=".$response['nama_pelanggan'];
+                    $response = $lg->redirect($red);
                 }
             }
         }
     }
+
+    /*Login split*/
+    if ($_GET['page']=='crew') {
+        $title = 'Login Crew';
+        $leftButton = 'fa-user';
+        $urlLogin = BASE_URL.'login.php?page=customer';
+        $signUpButton = 'd-none';
+    } else {
+        $title = 'Hi, Customer';
+        $leftButton = 'fa-users';
+        $urlLogin = BASE_URL.'login.php?page=crew';
+        $signUpButton = '';
+    }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <!-- Required meta tags-->
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="au theme template">
-        <meta name="author" content="Hau Nguyen">
-        <meta name="keywords" content="au theme template">
-        <!-- Title Page-->
-        <title>Halaman Login</title>
-        <!-- Fontfaces CSS-->
-        <link href="css/font-face.css" rel="stylesheet" media="all">
-        <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
-        <link href="vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" media="all">
-        <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
-        <!-- Bootstrap CSS-->
-        <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-        <!-- Vendor CSS-->
-        <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
-        <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
-        <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
-        <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
-        <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
-        <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
-        <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
-        <!-- Main CSS-->
-        <link href="css/theme.css" rel="stylesheet" media="all">
-        <link rel="stylesheet" href="css/sweet-alert.css">
-    </head>
-    <body class="animsition" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('images/bg4.jpg') no-repeat; background-size: cover;">
+<?php include "layouts/header.php";?>
+
+        <style type="text/css">
+            div.crewloginsticky {
+              position: -webkit-sticky; /* Safari */
+              position: sticky;
+              top: 50%;
+              left: 0;
+              /*background-color: green;*/
+              /*border: 2px solid #4CAF50;*/
+            }
+            .crewloginsticky>.bodys{
+                border-top-right-radius: 10px;
+                /*background: #63c76a;*/
+                background: white;
+                width: 50px;
+                height: 50px;
+                display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+        </style>
+
+        <div class="crewloginsticky">
+            <div class="bodys">
+                <a href="<?=$urlLogin?>">
+                    <i class="fas <?=$leftButton?> text-center fa-2x"></i>
+                </a>
+            </div>
+        </div>
         <div class="page-wrapper">
             <div class="container">
-                <br><br><br>
+                
                 <div class="login-wrap">
                     <div class="login-content">
                         <div class="login-logo">
@@ -81,7 +109,7 @@
                                 <img src="images/logo1.jpg" width="100" alt="LekerBaper">
                             </a>
                         </div>
-                        <div class="text-center"><h3>Login Pengguna</h3></div>
+                        <div class="text-center"><h3><?=$title?></h3></div>
                         <div class="login-form">
                             <form action="" method="post">
                                 <div class="form-group">
@@ -92,7 +120,7 @@
                                     <label>Password</label>
                                     <input required class="au-input au-input--full" type="password" name="password" placeholder="Password" value="<?= @$_POST['password'] ?>">
                                 </div>
-                                <div class="login-checkbox">
+                                <div class="login-checkbox d-none">
                                     <label>
                                         <input type="checkbox" name="remember">Remember Me
                                     </label>
@@ -102,35 +130,14 @@
                                 </div>
                                 <br>
                                 <button name="btnLogin" class="au-btn au-btn--block au-btn--green m-b-20" type="submit">sign in</button>
+                                <a href="<?=BASE_URL.'register_customer.php'?>" class="btn btn-danger au-btn--block <?=$signUpButton?>">Sign Up</a>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Jquery JS-->
-        <script src="vendor/jquery-3.2.1.min.js"></script>
-        <!-- Bootstrap JS-->
-        <script src="vendor/bootstrap-4.1/popper.min.js"></script>
-        <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
-        <!-- Vendor JS       -->
-        <script src="vendor/slick/slick.min.js">
-        </script>
-        <script src="vendor/wow/wow.min.js"></script>
-        <script src="vendor/animsition/animsition.min.js"></script>
-        <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
-        </script>
-        <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
-        <script src="vendor/counter-up/jquery.counterup.min.js">
-        </script>
-        <script src="vendor/circle-progress/circle-progress.min.js"></script>
-        <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-        <script src="vendor/chartjs/Chart.bundle.min.js"></script>
-        <script src="vendor/select2/select2.min.js">
-        </script>
-        <script src="js/sweetalert.min.js"></script>
-        <!-- Main JS-->
-        <script src="js/main.js"></script>
-        <?php include "config/alert.php";?>
-    </body>
-</html>
+
+        <?php include "layouts/footer.php";?>
+
+        

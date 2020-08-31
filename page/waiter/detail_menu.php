@@ -113,6 +113,13 @@
 			} else {
 				$kd_order = $_SESSION['kd_order'];
 
+				/*if order from customer page*/
+	            	if ($_SESSION['kd_pelanggan']) {
+	            		$kd_pelanggan= $_SESSION['kd_pelanggan'];
+	            	} else {
+	            		$kd_pelanggan=null;
+	            	}
+	            	
 				// Jika belum ada kode order 
 				if (!$kd_order) {
 					// BUat order baru
@@ -121,7 +128,8 @@
 					$status_order = 'belum_beli';
 					$kd_order = $autokode;
 					$redirect     = "dashboard.php";
-					$valueOrder = "'$kd_order', '$_GET[meja]', null, '$_GET[cust]', null, '', '$status_order', '$date'";
+
+					$valueOrder = "'$kd_order', '$_GET[meja]', null, '$_GET[cust]', null, '', '$status_order', '$date','$kd_pelanggan'";
 		            $response   = $order->new_order("tb_order", $valueOrder);
 
 		            if ($response['response']=='positive') {
@@ -130,6 +138,7 @@
 
 		            	//insert item detail menu baru
 		            	$autokodedetail     = $dm->autokode("tb_detail_order", "kd_detail", "DM");
+
 		            	$valueDetail = "'$autokodedetail', '$new_kd_order', '', '$kd_menu', '', '$jml_pesan', '$sub_total', '', '', '', '$status_detail'";
 		            	$response    = $order->new_order("tb_detail_order", $valueDetail);
 

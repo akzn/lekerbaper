@@ -7,7 +7,7 @@
     header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
     header("Cache-Control: no-cache");
     header("Pragma: no-cache");
-    header("Location: ".BASE_URL."login.php");
+    header("Location: ".BASE_URL."login.php?page=customer");
     exit();
 
     include "config/controller.php";
