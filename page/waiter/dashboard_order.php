@@ -26,7 +26,7 @@
         <section>
             <div class="row">
                 <div class="col-md-4">
-                    <h1>Kategori</h1>
+                    <h1 class="h1-white">Kategori</h1>
                 </div>
             </div>
             <!-- <br>

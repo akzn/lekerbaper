@@ -7,21 +7,22 @@
 <div class="container">
     <div class="row" style="margin-top: 50px;">
         <div class="col-md-4">
-            <h1>Menu <?=$getName['name_kategori']?></h1>
+            <h1 class="h1-white">Menu <?=$getName['name_kategori']?></h1>
         </div>
         <div class="col-md-4"></div>
-        <div class="col-md-4" hidden>
-            <form class="au-form-icon--sm float-right" action="" method="post">
+        <div class="col-md-4"   >
+            <!-- <form class="au-form-icon--sm float-right" action="" method="post">
                 <input class="au-input--w300 au-input--style2" type="text" placeholder="Cari Menu">
                 <button class="au-btn--submit2" type="submit">
                 <i class="zmdi zmdi-search"></i>
                 </button>
-            </form>
+            </form> -->
+            <a href="?page=dashboard&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-danger float-right">Kembali ke kategori</a>
         </div>
     </div>
     <br>
-    <a href="?page=dashboard&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-danger float-right">Kembali ke kategori</a>
-    <br><br>
+    <!-- <a href="?page=dashboard&meja=<?=$_GET['meja']?>&cust=<?=$_GET['cust']?>" class="btn btn-danger float-right">Kembali ke kategori</a> -->
+    <!-- <br><br> -->
     <div class="row">
         <div class="col-md-12">
         <ul class="list-group">

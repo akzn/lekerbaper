@@ -61,11 +61,15 @@
         $leftButton = 'fa-user';
         $urlLogin = BASE_URL.'login.php?page=customer';
         $signUpButton = 'd-none';
+        $logo = '<i class="fas fa-users text-center fa-2x" style="font-size:70px"></i>';
+        $logoU = '<img src="images/lekerbaper-logo-transparent.png" width="100" alt="LekerBaper">';
+        $bg_url = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
     } else {
         $title = 'Hi, Customer';
         $leftButton = 'fa-users';
         $urlLogin = BASE_URL.'login.php?page=crew';
         $signUpButton = '';
+        $logo = '<img src="images/lekerbaper-logo-transparent.png" width="100" alt="LekerBaper">';
     }
 ?>
 
@@ -101,12 +105,12 @@
         </div>
         <div class="page-wrapper">
             <div class="container">
-                
+                <div class="text-center"><?=$logoU?></div>
                 <div class="login-wrap">
                     <div class="login-content">
                         <div class="login-logo">
                             <a href="#">
-                                <img src="images/logo1.jpg" width="100" alt="LekerBaper">
+                                <?=$logo?>
                             </a>
                         </div>
                         <div class="text-center"><h3><?=$title?></h3></div>

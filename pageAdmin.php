@@ -1,4 +1,5 @@
 <?php
+    include "config/config.php";
     include "config/controller.php";
     include "controller/listing.php";
     $function = new Resto();
@@ -48,6 +49,21 @@
         <link href="css/theme.css" rel="stylesheet" media="all">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+        <style type="text/css">
+            .navbar-sidebar2 .navbar__sub-list li {
+                    background: #bbbbbb;
+                }
+            .navbar-sidebar2 > ul > li.has-sub > a::after{
+                content:"\25C0";
+                float:right;
+            }
+
+            .navbar-sidebar2 > ul > li.has-sub > a.open::after{
+                content:"\25BC";
+                float:right;
+            }
+
+        </style>
     </head>
     <body>
         <div class="page-wrapper">
@@ -72,18 +88,44 @@
                                 <a href="?page">
                                 <i class="zmdi zmdi-view-dashboard zmdi-hc-lg"></i>Dashboard</a>
                             </li>
-                            <li>
-                                <a href="?page=indexLevel">
-                                <i class="zmdi zmdi-account zmdi-hc-lg"></i>Level</a>
+
+                            <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="zmdi zmdi-account zmdi-hc-lg"></i>Pengguna
+                                <!-- <i class="fas fa-caret-down"></i> -->
+                            </a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                    <li>
+                                        <a href="?page=indexLevel">
+                                        Level</a>
+                                    </li>
+                                    <li>
+                                        <a href="?page=indexPengguna">
+                                        <!-- <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i> -->
+                                        Pengguna</a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li>
-                                <a href="?page=indexKategori">
-                                <i class="zmdi zmdi-widgets zmdi-hc-lg"></i>Kategori</a>
+
+                            <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i>Menu
+                                <!-- <i class="fas fa-caret-down"></i> -->
+                            </a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                    <li>
+                                        <a href="?page=indexKategori">
+                                        <!-- <i class="zmdi zmdi-widgets zmdi-hc-lg"></i> -->
+                                        Kategori Menu</a>
+                                    </li>
+                                    <li>
+                                        <a href="?page=indexMenu">
+                                        <!-- <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i> -->
+                                        Daftar Menu</a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li>
-                                <a href="?page=indexMenu">
-                                <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i>Menu</a>
-                            </li>
+                        
                             <li>
                                 <a href="?page=indexMeja">
                                 <i class="zmdi zmdi-chart zmdi-hc-lg"></i>Meja</a>
@@ -98,8 +140,9 @@
                             </li>
                             <li class="has-sub">
                                 <a class="js-arrow" href="#">
-                                <i class="fas fa-archive"></i>Laporan</a>
-                                <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <i class="fas fa-archive"></i>Laporan<!-- <i class="fas fa-caret-down"></i> --></a>
+                                <!-- <ul class="navbar-mobile-sub__list list-unstyled js-sub-list"> -->
+                                <ul class="list-unstyled navbar__sub-list js-sub-list">
                                     <li>
                                         <a href="?page=indexLaporan">Kelola Transaksi</a>
                                     </li>
@@ -253,6 +296,17 @@
                     case 'indexLevel':
                     include "page/admin/level/index.php";
                     break;
+                    /*Pengguna*/
+                    case 'indexPengguna':
+                    include "page/admin/users/index.php";
+                    break;
+                    case 'createPengguna':
+                    include "page/admin/users/create.php";
+                    break;
+                    case 'updatePengguna':
+                    include "page/admin/users/update.php";
+                    break;
+
                     case 'indexKategori':
                     include "page/admin/kategori/index.php";
                     break;

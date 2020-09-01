@@ -82,6 +82,25 @@
 	        return $data;
 	    }
 
+	    public function getUnfinishedOrderByMeja($no_meja){
+	    	global $con;
+	        $sql   = "SELECT
+						  *
+						FROM
+						  tb_order
+						WHERE
+							no_meja = '$no_meja' 
+						And 
+							(status_order = 'belum_beli' or status_order = 'belum_bayar')
+						";
+	        $query = mysqli_query($con, $sql);
+	        $data  = [];
+	        while ($bigData = mysqli_fetch_assoc($query)) {
+	            $data[] = $bigData;
+	        }
+	        return $data;
+	    }
+
 
 		public function getKeranjang($table, $where, $whereValues)
 	    {

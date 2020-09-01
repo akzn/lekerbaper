@@ -14,13 +14,29 @@
     $auth2    = $id->AuthPelanggan($_SESSION['username']);
     $response = $id->sessionCheck();
 
+    # load order by meja
+    if ($_GET['meja']) {
+        $getData = $order->getUnfinishedOrderByMeja($_GET['meja']);
+        if ($getData) {
+            $_GET['meja'] = $getData[0]['no_meja'];
+            $_GET['cust'] = $getData[0]['nama_user'];
+            $_GET['kd_order'] = $getData[0]['kd_order'];
+            $_SESSION['kd_order']=$getData[0]['kd_order'];
+        } else {
+            $_GET['meja'] = $_GET['meja'];
+            $_GET['cust'] = $_GET['cust'];
+            unset($_SESSION['kd_order']);
+        }
+    }
+
     # check if session order is intact
     if ($_SESSION['kd_order']) {
         # get meja and customer data
         $getData = $id->selectWhere('tb_order','kd_order',$_SESSION['kd_order']);
         $_GET['meja'] = $getData['no_meja'];
         $_GET['cust'] = $getData['nama_user'];
-     } 
+    } 
+
 
     # Nama pelanggan dan meja 
     $waiter = 'Masih Kosong';
@@ -38,7 +54,7 @@
     $meja = "Belum Dipilih";
     if ($auth2['no_meja'] != '') {
         $meja = $auth2['no_meja'];
-    }
+    } 
     
 
     // if ($response == "false") {
@@ -178,8 +194,23 @@
         <!-- Main CSS-->
         <link href="css/theme.css" rel="stylesheet" media="all">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+        <style type="text/css">
+            /*.h1-white{
+                color: white;
+            }
+            .btn-info {
+                color: #fff;
+                background-color: #63c76a;
+                border-color: #63c76a;
+            }
+            .btn-info:hover {
+                background: #59bd60;
+                border-color: #59bd60;
+            }*/
+        </style>
     </head>
     <body style="background-color: #F2F2F2;">
+        <!-- <body style="background-color: #1f1f1f;"> -->
         <div class="page-wrapper">
             <header class="header-desktop4">
                 <div class="container">
@@ -286,7 +317,7 @@
                                    
                                 </div>
                             </div>
-                            <button class="btn btn-primary" style="margin-top:5px;">pilih</button>
+                            <button class="btn btn-warning float-right" style="margin-top:5px;">pilih</button>
                             </form>
                         </div> 
                     </div>
@@ -368,6 +399,7 @@
                                 </thead>
                                 <tbody>
                                     <?php
+                                    if ($data_keranjang) {
                                     if (count($data_keranjang) > 0) {
                                     $no = 1;
                                     foreach ($data_keranjang as $datas) {
@@ -380,6 +412,11 @@
                                         <td>
                                             <?php
                                             $status_d = $datas['status_detail'];
+                                            
+                                            if (!$status_d||$status_d=='') {
+                                                $status_d = "pending";
+                                            }
+
                                             if ($status_d == "pending") {
                                             ?>
                                             <span style="padding: 10px;" class="badge badge-pill badge-dark"><?=$status_d?></span>
@@ -434,6 +471,9 @@
                                     <?php } else {?>
                                     <br>
                                     <td colspan="6" class="text-center"><h3>Daftar Kosong</h3></td>
+                                    <?php }?>
+                                    <?php } else {?>
+                                        <td colspan="6" class="text-center"><h3>Daftar Kosong</h3></td>
                                     <?php }?>
                                 </tbody>
                             </table>

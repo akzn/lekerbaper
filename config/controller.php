@@ -77,6 +77,17 @@
 			}
 		}
 
+		public function sqlQuery($query,$redirect){
+			global $con;
+			$sql = $query;
+			$query = mysqli_query($con, $sql);
+			if($query){
+				return ['response'=>'positive', 'alert'=>'Berhasil Update Data',  'redirect'=>$redirect];
+			}else{
+				return ['response'=>'negative', 'alert'=>'Gagal Update Data'];
+			}
+		}
+
 		public function delete($table, $where, $whereValues, $redirect){
 			global $con;
 			$sql = "DELETE FROM $table WHERE $where='$whereValues'";
@@ -278,6 +289,8 @@
 	        }
 
 	    }
+
+
 
     	public function autokode($table, $field, $pre)
     	{

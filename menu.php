@@ -212,6 +212,7 @@
                             <a href="#">
                                 <img src="images/logo1.jpg" alt="Leker Baper" width="80"/>
                             </a>
+                            <h3 style="margin-left:20px">Hi! <?=$_SESSION['nama_pelanggan']?></h3>
                         </div>
                         <div class="header__tool">
                             <div class="header-button-item js-item-menu" style="color:black; font-size: 20px">
@@ -283,7 +284,7 @@
                                 <div class="overview__inner">
                                     <div class="overview-box clearfix">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 d-none">
                                                 <h5>Customer : <input type="" name="cust" class="form-control" value="<?=$customer?>"  readonly></h5>
                                             </div>
                                             <div class="col-md-4">
@@ -302,15 +303,16 @@
                                                     </select>        
                                                 </h5>
                                             </div>
-                                            <div class="col-md-4 d-none">
-                                                <h5>Waiter : <input type="" name="" class="form-control" value="<?=$waiter?> " disabled readonly></h5>
+                                            <div class="col-md-4">
+                                                <!-- <h5>Waiter : <input type="" name="" class="form-control" value="<?=$waiter?> " disabled readonly></h5> -->
+                                                <button class="btn btn-warning" style="margin-top:17px;width: 100px">pilih</button>
                                             </div>
                                         </div>
                                     </div>
                                    
                                 </div>
                             </div>
-                            <button class="btn btn-primary" style="margin-top:5px;">pilih</button>
+                            <!-- <button class="btn btn-primary float-right" style="margin-top:5px;">pilih</button> -->
                             </form>
                         </div> 
                     </div>
@@ -405,6 +407,9 @@
                                         <td>
                                             <?php
                                             $status_d = $datas['status_detail'];
+                                            if (!$status_d||$status_d=='') {
+                                                $status_d = "pending";
+                                            }
                                             if ($status_d == "pending") {
                                             ?>
                                             <span style="padding: 10px;" class="badge badge-pill badge-dark"><?=$status_d?></span>
