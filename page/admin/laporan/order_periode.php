@@ -1,9 +1,40 @@
 <?php
 $op = new Resto();
 
+$query = "SELECT
+  `tb_detail_order`.`kd_detail`          AS `kd_detail`,
+  `tb_detail_order`.`order_kd`           AS `order_kd`,
+  `tb_detail_order`.`user_kd`            AS `user_kd`,
+  `tb_detail_order`.`menu_kd`            AS `menu_kd`,
+  `tb_detail_order`.`transaksi_kd`       AS `transaksi_kd`,
+  `tb_detail_order`.`total`              AS `total`,
+  `tb_detail_order`.`sub_total`          AS `sub_total`,
+  `tb_detail_order`.`keterangan`         AS `keterangan`,
+  `tb_detail_order`.`status_keterangan`  AS `status_keterangan`,
+  `tb_detail_order`.`balasan_keterangan` AS `balasan_keterangan`,
+  `tb_detail_order`.`status_detail`      AS `status_detail`,
+  `tb_menu`.`kd_menu`                    AS `kd_menu`,
+  `tb_menu`.`name_menu`                  AS `name_menu`,
+  `tb_menu`.`harga`                      AS `harga`,
+  `tb_menu`.`status`                     AS `status`,
+  `tb_user`.`name`                       AS `name`,
+  `tb_user`.`level`                      AS `level`,
+  `tb_order`.`no_meja`                   AS `no_meja`,
+  `tb_order`.`tanggal`                   AS `tanggal`,
+  `tb_order`.`nama_user`                 AS `nama_user`,
+  `tb_order`.`status_order`              AS `status_order`
+FROM (((`tb_detail_order`
+     JOIN `tb_menu`
+       ON (`tb_detail_order`.`menu_kd` = `tb_menu`.`kd_menu`))
+    JOIN `tb_user`
+      ON (`tb_detail_order`.`user_kd` = `tb_user`.`kd_user`))
+   JOIN `tb_order`
+     ON (`tb_detail_order`.`order_kd` = `tb_order`.`kd_order`))";
+
 $awal  = @$_POST['dateAwal'];
 $akhir = @$_POST['dateAkhir'];
-$data  = $op->selectBetween("detail_order", "tanggal", $awal, $akhir);
+// $data  = $op->selectBetween("detail_order", "tanggal", $awal, $akhir);
+$data = $op->getQuery($query);
 
 if (isset($_POST['btnSearch'])) {
 	$awal  = $_POST['dateAwal'];

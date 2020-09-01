@@ -28,6 +28,17 @@
 	        return $data = mysqli_fetch_assoc($query);
 	    }
 
+	    public function getQuery($query){
+			global $con;
+			$sql = $query;
+			$query = mysqli_query($con, $sql);
+	        $data  = [];
+	        while ($bigData = mysqli_fetch_assoc($query)) {
+	            $data[] = $bigData;
+	        }
+	        return $data;
+		}
+
 	}
 
 	

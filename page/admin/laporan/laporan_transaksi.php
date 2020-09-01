@@ -1,6 +1,15 @@
 <?php
       $lp        = new Resto();
-      $dataTrans = $lp->selectOrderBy("transaksi", "waktu");
+      // $dataTrans = $lp->selectOrderBy("transaksi", "waktu");
+      $dataTrans = $lp->getQuery("SELECT kd_transaksi,kd_order,tb_user.name,tb_pelanggan.name_pelanggan,tb_transaksi.tanggal,tb_transaksi.total_harga 
+                  from  tb_transaksi 
+                  join tb_order on tb_order.kd_order = tb_transaksi.order_kd 
+                  join tb_user on tb_user.kd_user = tb_transaksi.user_kd
+                  left join tb_pelanggan on tb_pelanggan.kd_pelanggan = tb_order.kd_pelanggan
+                  order by tb_transaksi.waktu desc
+                  ");
+      // var_dump($dataTrans);
+
       $grand     = $lp->selectSum("transaksi", "total_harga");
       if (isset($_GET['kd'])) {
             $id         = $_GET['kd'];
@@ -95,8 +104,9 @@
                                                       <tr>
                                                             <td>Kode Transaksi</td>
                                                             <td>Nama Kasir</td>
-                                                            <td>Total Harga</td>
+                                                            <!-- <td>Pelanggan</td> -->
                                                             <td>Tanggal Beli</td>
+                                                            <td>Total Harga</td>
                                                       </tr>
                                                 </thead>
                                                 <tbody>
@@ -104,15 +114,17 @@
                                                       <tr>
                                                             <td><?=$dts['kd_transaksi']?></td>
                                                             <td><?=$dts['name']?></td>
-                                                            <td><?="Rp." . number_format($dts['total_harga']) . ",-"?></td>
+                                                            <!-- <td><?=$dts['name_pelanggan']?></td> -->
                                                             <td><?=$dts['tanggal']?></td>
+                                                            <td><?="Rp." . number_format($dts['total_harga']) . ",-"?></td>
                                                       </tr>
                                                       <?php endforeach?>
                                                       <tr>
                                                             <td></td>
-                                                            <td>Grand Total</td>
-                                                            <td><?php echo "Rp." . number_format($grand['sum']) . ",-" ?></td>
                                                             <td></td>
+                                                            <!-- <td></td> -->
+                                                            <td>Total</td>
+                                                            <td><?php echo "Rp." . number_format($grand['sum']) . ",-" ?></td>
                                                       </tr>
                                                 </tbody>
                                           </table>

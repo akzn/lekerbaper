@@ -61,7 +61,7 @@
         $leftButton = 'fa-user';
         $urlLogin = BASE_URL.'login.php?page=customer';
         $signUpButton = 'd-none';
-        $logo = '<i class="fas fa-users text-center fa-2x" style="font-size:70px"></i>';
+        $logo = '<i class="fas fa-users text-center fa-2x color-shade-black" style="font-size:70px;"></i>';
         $logoU = '<img src="images/lekerbaper-logo-transparent.png" width="100" alt="LekerBaper">';
         $bg_url = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
     } else {
@@ -94,12 +94,15 @@
               justify-content: center;
               align-items: center;
             }
+            .color-shade-black{
+                color:#3c3c3c;
+            }
         </style>
 
         <div class="crewloginsticky">
             <div class="bodys">
                 <a href="<?=$urlLogin?>">
-                    <i class="fas <?=$leftButton?> text-center fa-2x"></i>
+                    <i class="fas <?=$leftButton?> text-center fa-2x color-shade-black"></i>
                 </a>
             </div>
         </div>
@@ -118,11 +121,11 @@
                             <form action="" method="post">
                                 <div class="form-group">
                                     <label>Username</label>
-                                    <input required class="au-input au-input--full" type="text" name="username" placeholder="Username" value="<?= @$_POST['username'] ?>">
+                                    <input required class="form-control" type="text" name="username" placeholder="Username" value="<?= @$_POST['username'] ?>">
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input required class="au-input au-input--full" type="password" name="password" placeholder="Password" value="<?= @$_POST['password'] ?>">
+                                    <input required class="form-control" type="password" name="password" placeholder="Password" value="<?= @$_POST['password'] ?>">
                                 </div>
                                 <div class="login-checkbox d-none">
                                     <label>

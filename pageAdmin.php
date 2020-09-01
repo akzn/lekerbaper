@@ -51,7 +51,7 @@
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
         <style type="text/css">
             .navbar-sidebar2 .navbar__sub-list li {
-                    background: #bbbbbb;
+                    background: #e8e8e8;
                 }
             .navbar-sidebar2 > ul > li.has-sub > a::after{
                 content:"\25C0";

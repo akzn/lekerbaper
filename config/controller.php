@@ -42,6 +42,17 @@
 	        return $data;
 		}
 
+		public function getQuery($query){
+			global $con;
+			$sql = $query;
+			$query = mysqli_query($con, $sql);
+	        $data  = [];
+	        while ($bigData = mysqli_fetch_assoc($query)) {
+	            $data[] = $bigData;
+	        }
+	        return $data;
+		}
+
 		public function edit($table, $where, $whereValues)
 	    {
 	        global $con;
@@ -77,7 +88,7 @@
 			}
 		}
 
-		public function sqlQuery($query,$redirect){
+		public function sqlQuery($query,$redirect=null){
 			global $con;
 			$sql = $query;
 			$query = mysqli_query($con, $sql);
