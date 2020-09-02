@@ -1,4 +1,7 @@
 <?php
+    
+
+
     include "config/config.php";
     include "config/controller.php";
     include "controller/meja.php";
@@ -10,6 +13,11 @@
     $order = new Order();
 
     session_start();
+
+    if (!$_SESSION['username']) {
+        header('location:'.BASE_URL);
+    }
+
     $auth     = $id->AuthUser($_SESSION['username']);
     $auth2    = $id->AuthPelanggan($_SESSION['username']);
     $response = $id->sessionCheck();

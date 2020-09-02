@@ -1,16 +1,28 @@
+
+<head>
+    
+      <meta http-equiv="cache-control" content="no-cache, must-revalidate, post-check=0, pre-check=0" />
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+  <meta http-equiv="pragma" content="no-cache" />
+  
+</head>
+
 <?php
 
     include "config/config.php";
 
     #hax - go to menu
     // header("Location: ".BASE_URL."index_waiter.php", true, 301);
+
     header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
     header("Cache-Control: no-cache");
     header("Pragma: no-cache");
     header("Location: ".BASE_URL."login.php?page=customer");
     exit();
 
-    include "config/controller.php";
+    /*include "config/controller.php";
     session_start();
     $lg            = new resto();
     $table         = "tb_user";
@@ -55,7 +67,7 @@
                 $response = ['response' => 'negative', 'alert' => 'No meja tidak terdaftar, silahkan cek no meja kembali'];
             }
         }
-    }
+    }*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
