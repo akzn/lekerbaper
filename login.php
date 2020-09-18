@@ -97,6 +97,12 @@
             .color-shade-black{
                 color:#3c3c3c;
             }
+            .login-content{
+                -webkit-box-shadow: 5px 5px 50px 0px rgba(142,151,242,0.75);-moz-box-shadow: 5px 5px 50px 0px rgba(142,151,242,0.75);box-shadow: 5px 5px 50px 0px rgba(142,151,242,0.75);
+            }
+            .page-wrapper{
+                padding-bottom: 50px;
+            }
         </style>
 
         <div class="crewloginsticky">

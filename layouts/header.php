@@ -33,6 +33,7 @@
     <?php
         if (!$bg_url) {
             $bg_url = 'images/bg4.jpg';
+            $BGstyle = "background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('images/bg4.jpg') no-repeat; background-size: cover;";
         }
     ?>
-    <body class="animsition" style="background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(<?=$bg_url?>) no-repeat; background-size: cover;">
+    <body class="animsition" style="<?=$BGstyle?>">
