@@ -39,7 +39,20 @@ $data = $op->getQuery($query);
 if (isset($_POST['btnSearch'])) {
 	$awal  = $_POST['dateAwal'];
 	$akhir = $_POST['dateAkhir'];
-	$data  = $op->selectBetween("detail_order", "tanggal", $awal, $akhir);
+	// $data  = $op->selectBetween("tb_detail_order", "tanggal", $awal, $akhir);
+
+	$query = "SELECT
+			  *,
+			  b.no_meja,b.tanggal
+			FROM
+			   tb_order b
+			  -- Left JOIN tb_pelanggan c
+			    -- ON b.kd_pelanggan = c.kd_pelanggan
+			    JOIN `tb_transaksi` d
+			    ON b.kd_order = d.order_kd
+				WHERE b.tanggal BETWEEN '$awal'
+				  AND '$akhir' ORDER BY CONVERT(SUBSTR(kd_transaksi,3),SIGNED INTEGER) desc";
+	$data = $op->getQuery($query);
 }
 ?>
 <div class="main-content" style="margin-top: 20px;">
@@ -68,19 +81,22 @@ if (isset($_POST['btnSearch'])) {
 								<a href="?page=order_periode" class="btn btn-danger">Reload</a>
 								<br><br>
 								<?php if (isset($_POST['dateAwal'])): ?>
-								<a target="_blank" href="page/admin/laporan/order_periode_print.php?dateAwal=<?php echo $awal ?>&dateAkhir=<?php echo $akhir ?>" style="color: white;" class="btn btn-primary"><i class="fa fa-print"></i> Print</a>
+								<!-- <a target="_blank" href="page/admin/laporan/order_periode_print.php?dateAwal=<?php echo $awal ?>&dateAkhir=<?php echo $akhir ?>" style="color: white;" class="btn btn-primary"><i class="fa fa-print"></i> Print</a> -->
+
+								<a target="_blank" href="?page=order_periode_print&dateAwal=<?php echo $awal ?>&dateAkhir=<?php echo $akhir ?>" style="color: white;" class="btn btn-primary"><i class="fa fa-print"></i> Print</a>
+
 								<?php endif?>
 								<br><br>
-								<div class="table-responsive">
-									<table class="table table-striped table-hover table-bordered">
+								<div class="table-responsive ">
+									<table class="table table-striped table-hover table-bordered dttb">
 										<thead>
 											<tr>
-												<th>Kode Order</th>
+												<th>Kode Transaksi</th>
 												<th>Pelanggan</th>
 												<th>No Meja</th>
-												<th>Nama Menu</th>
-												<th>Jumlah</th>
-												<th>Sub total</th>
+												<!-- <th>Nama Menu</th> -->
+												<!-- <th>Jumlah</th> -->
+												<!-- <th>Sub total</th> -->
 												<th>Harga</th>
 												<th>Tanggal</th>
 											</tr>
@@ -90,13 +106,13 @@ if (isset($_POST['btnSearch'])) {
 											$no = 1;
 											foreach (@$data as $ds) {?>
 											<tr>
-												<td><?=$ds['order_kd']?></td>
-												<td><?=$ds['name']?></td>
+												<td><?=$ds['kd_transaksi']?></td>
+												<td><?=$ds['nama_user']?></td>
 												<td><?=$ds['no_meja']?></td>
-												<td><?=$ds['name_menu']?></td>
-												<td><?=$ds['total']?></td>
-												<td><?=$ds['sub_total']?></td>
-												<td><?=number_format($ds['harga'])?></td>
+												<!-- <td><?=$ds['name_menu']?></td> -->
+												<!-- <td><?=$ds['total']?></td> -->
+												<!-- <td><?=$ds['sub_total']?></td> -->
+												<td><?=number_format($ds['total_harga'])?></td>
 												<td><?=$ds['tanggal']?></td>
 												<?php $no++;}?>
 											</tbody>
@@ -110,3 +126,11 @@ if (isset($_POST['btnSearch'])) {
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+      $(function(){
+            $('.dttb').DataTable({
+            	"order": []
+            });
+      })
+</script>

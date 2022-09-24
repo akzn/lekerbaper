@@ -13,7 +13,7 @@
 ?>
 <?php include 'layouts/crew-header.php' ?>
 
-                    <nav class="navbar-sidebar2">
+                    <!-- <nav class="navbar-sidebar2">
                         <ul class="list-unstyled navbar__list">
                             <li>
                                 <a href="?page">
@@ -30,8 +30,8 @@
                         </ul>
                     </nav>
                 </div>
-            </aside>
-            <div class="page-container2">
+            </aside> -->
+           <!--  <div class="page-container2">
                 <header class="header-desktop2">
                     <div class="section__content section__content--p30">
                         <div class="container-fluid">
@@ -41,7 +41,7 @@
                                         <img src="images/icon/logo-white.png" alt="CoolAdmin" />
                                     </a>
                                 </div>
-                                <div class="header-button2">
+                                <div class="header-button2"> -->
                                     <!-- <div class="header-button-item js-item-menu">
                                         <i class="zmdi zmdi-search"></i>
                                         <div class="search-dropdown js-dropdown">
@@ -91,11 +91,11 @@
                                             </div>
                                         </div>
                                     </div> -->
-                                    <div class="header-button-item mr-0 js-sidebar-btn">
+                                    <!-- <div class="header-button-item mr-0 js-sidebar-btn">
                                         <i class="zmdi zmdi-menu"></i>
                                     </div>
                                     <div class="setting-menu js-right-sidebar d-none d-lg-block">
-                                        <div class="account-dropdown__body">
+                                        <div class="account-dropdown__body"> -->
                                             <!-- <div class="account-dropdown__item">
                                                 <a href="?page=profile">
                                                 <i class="zmdi zmdi-account"></i>Account</a>
@@ -104,7 +104,7 @@
                                                 <a href="#">
                                                 <i class="zmdi zmdi-settings"></i>Setting</a>
                                             </div> -->
-                                            <div class="account-dropdown__item">
+                                           <!--  <div class="account-dropdown__item">
                                                 <a href="homepage.php?logout" id="forLogout">
                                                 <i class="zmdi zmdi-power"></i>Logout</a>
                                             </div>
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                </header>
+                </header> -->
                 <aside class="menu-sidebar2 js-right-sidebar d-block d-lg-none">
                     <div class="logo">
                         <a href="#">

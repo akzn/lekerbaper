@@ -12,6 +12,8 @@
 
     $order = new Order();
 
+    $con = $id->connect();
+
     session_start();
 
     if (!$_SESSION['username']) {
@@ -74,10 +76,10 @@
     $num2    = mysqli_num_rows($exe2);
     $dta2    = mysqli_fetch_assoc($exe2);
     $data_kd = $dta2['kd_order'];
-    $sql3     = "SELECT status_detail FROM tb_detail_order_temporary WHERE order_kd='$data_kd'";
-    $exe3     = mysqli_query($con, $sql3);
-    $num3     = mysqli_num_rows($exe3);
-    $dta3     = mysqli_fetch_assoc($exe3);
+    // $sql3     = "SELECT status_detail FROM tb_detail_order_temporary WHERE order_kd='$data_kd'";
+    // $exe3     = mysqli_query($con, $sql3);
+    // $num3     = mysqli_num_rows($exe3);
+    // $dta3     = mysqli_fetch_assoc($exe3);
     $data_kd2 = $dta3['status_detail'];
     $sql4     = "SELECT status_order FROM tb_order WHERE kd_order='$data_kd'";
     $exe4     = mysqli_query($con, $sql4);
@@ -299,7 +301,7 @@
                                     <div class="overview-box clearfix">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <h5>Customer : <input type="" name="cust" class="form-control" value="<?=$customer?>"></h5>
+                                                <h5>Customer : <input type="" name="cust" class="form-control val-alphanum" value="<?=$customer?>"></h5>
                                             </div>
                                             <div class="col-md-4">
                                                 <h5>Meja : 
@@ -554,6 +556,7 @@
         <script src="js/main.js"></script>
         <script src="js/sweetalert.min.js"></script>
         <script src="js/bootstrap-datepicker.min.js"></script>
+        <script src="js/validation.js"></script>
         <script>
         $(document).ready(function() {
         $('#example').DataTable();

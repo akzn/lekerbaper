@@ -17,7 +17,7 @@
 ?>
 <?php include 'layouts/crew-header.php' ?>
 
-                    <nav class="navbar-sidebar2">
+                    <!-- <nav class="navbar-sidebar2">
                         <ul class="list-unstyled navbar__list">
                             <li>
                                 <a href="?page">
@@ -26,7 +26,8 @@
                         </ul>
                     </nav>
                 </div>
-            </aside>
+            </aside> -->
+            <?php /*
             <div class="page-container2">
                 <header class="header-desktop2">
                     <div class="section__content section__content--p30">
@@ -111,6 +112,7 @@
                         </div>
                     </div>
                 </header>
+                 */ ?>
                 <aside class="menu-sidebar2 js-right-sidebar d-block d-lg-none">
                     <div class="logo">
                         <a href="#">

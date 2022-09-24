@@ -90,15 +90,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Total Harga</label>
-                                    <input type="number" id="total" class="form-control form-control-md" name="total_harga" value="<?=$assoc['sub']?>">
+                                    <input type="number" id="total" class="form-control form-control-md val-num" name="total_harga" value="<?=$assoc['sub']?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Bayar</label>
-                                    <input type="number" class="form-control form-control-md" name="bayar" id="bayar">
+                                    <input type="number" class="form-control form-control-md val-num" name="bayar" id="bayar">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Kembalian</label>
-                                    <input type="number" class="form-control form-control-md" name="kembalian" id="kembalian">
+                                    <input type="number" class="form-control form-control-md val-num" name="kembalian" id="kembalian">
                                 </div>
                             </div>
                             <div class="card-footer">

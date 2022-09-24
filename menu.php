@@ -4,6 +4,7 @@
     include "controller/meja.php";
     include "controller/order.php";
     
+
     $id = new Resto();
     $classMeja = new Meja();
 
@@ -14,6 +15,8 @@
     if (!$_SESSION['kd_pelanggan']) {
         header("location:".BASE_URL.'login.php');
     }
+
+    $con = $id->connect();
 
     $auth     = $id->AuthUser($_SESSION['username']);
     $auth2    = $id->AuthPelanggan($_SESSION['username']);
@@ -86,7 +89,7 @@
     if (isset($_GET['delete'])) {
     if ($data_kd3 == "belum_beli") {
     ?>
-        <script src="vendor/jquery-3.2.1.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/jquery-3.2.1.min.js"></script>
             <script>
             $(document).ready(function(){
             swal({
@@ -343,7 +346,7 @@
                         </div>
                     </div>
                 </section>
-                <script src="vendor/jquery-3.2.1.min.js"></script>
+                <script src="<?=BASE_URL?>vendor/jquery-3.2.1.min.js"></script>
                 <script>
                 $('#btdelete').click(function(e){
                 e.preventDefault();
@@ -433,7 +436,7 @@
                                             <button id="bthapus2<?=$no;?>" class="btn btn-danger btn-sm">hapus</button>
                                         </td>
                                     </tr>
-                                    <script src="../../vendor/jquery-3.2.1.min.js"></script>
+                                    <script src="<?=BASE_URL?>vendor/jquery-3.2.1.min.js"></script>
                                     <script>
                                     $("#bthapus2<?php echo $no; ?>").click(function(e){
 
@@ -508,32 +511,32 @@
 </div>
 
         <!-- Jquery JS-->
-        <script src="vendor/jquery-3.2.1.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/jquery-3.2.1.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
         <!-- Bootstrap JS-->
-        <script src="vendor/bootstrap-4.1/popper.min.js"></script>
-        <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/bootstrap-4.1/popper.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/bootstrap-4.1/bootstrap.min.js"></script>
         <!-- Vendor JS       -->
-        <script src="vendor/slick/slick.min.js">
+        <script src="<?=BASE_URL?>vendor/slick/slick.min.js">
         </script>
-        <script src="vendor/wow/wow.min.js"></script>
-        <script src="vendor/animsition/animsition.min.js"></script>
-        <script src="vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+        <script src="<?=BASE_URL?>vendor/wow/wow.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/animsition/animsition.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
         </script>
-        <script src="vendor/counter-up/jquery.waypoints.min.js"></script>
-        <script src="vendor/counter-up/jquery.counterup.min.js">
+        <script src="<?=BASE_URL?>vendor/counter-up/jquery.waypoints.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/counter-up/jquery.counterup.min.js">
         </script>
-        <script src="vendor/circle-progress/circle-progress.min.js"></script>
-        <script src="vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-        <script src="vendor/chartjs/Chart.bundle.min.js"></script>
-        <script src="vendor/select2/select2.min.js">
+        <script src="<?=BASE_URL?>vendor/circle-progress/circle-progress.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+        <script src="<?=BASE_URL?>vendor/chartjs/Chart.bundle.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/select2/select2.min.js">
         </script>
-        <script src="vendor/vector-map/jquery.vmap.js"></script>
-        <script src="vendor/vector-map/jquery.vmap.min.js"></script>
-        <script src="vendor/vector-map/jquery.vmap.sampledata.js"></script>
-        <script src="vendor/vector-map/jquery.vmap.world.js"></script>
-        <script src="vendor/dropify/dist/js/dropify.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/vector-map/jquery.vmap.js"></script>
+        <script src="<?=BASE_URL?>vendor/vector-map/jquery.vmap.min.js"></script>
+        <script src="<?=BASE_URL?>vendor/vector-map/jquery.vmap.sampledata.js"></script>
+        <script src="<?=BASE_URL?>vendor/vector-map/jquery.vmap.world.js"></script>
+        <script src="<?=BASE_URL?>vendor/dropify/dist/js/dropify.min.js"></script>
         <!-- Main JS-->
         <script src="js/jquery.input-counter.min.js"></script>
         <script src="js/main.js"></script>

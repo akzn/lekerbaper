@@ -18,7 +18,7 @@ $function->logout();
 ?>
 <?php include 'layouts/crew-header.php' ?>
 
-                    <nav class="navbar-sidebar2">
+                    <!-- <nav class="navbar-sidebar2">
                         <ul class="list-unstyled navbar__list">
                             <li>
                                 <a href="?page">
@@ -35,7 +35,8 @@ $function->logout();
                         </ul>
                     </nav>
                 </div>
-            </aside>
+            </aside> -->
+            <?php /*
             <div class="page-container2">
                 <header class="header-desktop2">
                     <div class="section__content section__content--p30">
@@ -120,6 +121,7 @@ $function->logout();
                         </div>
                     </div>
                 </header>
+                 */?>
                 <aside class="menu-sidebar2 js-right-sidebar d-block d-lg-none">
                     <div class="logo">
                         <a href="#">
@@ -164,9 +166,15 @@ $function->logout();
                 case "indexLaporan":
                 include "page/kasir/laporan/laporan_transaksi.php";
                 break;
+                case 'order_periode':
+                include "page/admin/laporan/order_periode.php";
+                break;
+                case 'order_periode_print':
+                include "page/admin/laporan/order_periode_print.php";
+                break;
                 default:
-                $page = "dashboard";
-                include "page/kasir/dashboard/index.php";
+                $page = "indexTransaksi";
+                include "page/kasir/transaksi/transaksi.php";
                 break;
                 }
                 ?>

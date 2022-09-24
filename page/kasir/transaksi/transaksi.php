@@ -1,9 +1,12 @@
 <?php
 $tr         = new Resto();
+
+$con = $tr->connect();
+
 $autokode   = $tr->autokode("tb_transaksi", "kd_transaksi", "TA");
 $dataOrder  = $tr->selectOrderDate("tb_order", "status_order", "belum_bayar", "tanggal");
 $kd_order   = @$_GET["kd"];
-$dataDetail = $tr->selectWhere("detail_order", "order_kd", $kd_order);
+$dataDetail = $tr->selectWhere("tb_detail_order", "order_kd", $kd_order);
 //Sum total
 $sql   = "SELECT SUM(sub_total) as sub FROM tb_detail_order WHERE order_kd = '$kd_order'";
 $exec  = mysqli_query($con, $sql);
@@ -94,15 +97,15 @@ if (isset($_POST['getSimpan'])) {
                                 </div>
                                 <div class="form-group">
                                     <label for="">Total Harga</label>
-                                    <input type="number" id="total" class="form-control form-control-md" name="total_harga" value="<?=$assoc['sub']?>">
+                                    <input type="number" id="total" class="form-control form-control-md val-num" name="total_harga" value="<?=$assoc['sub']?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Bayar</label>
-                                    <input type="number" class="form-control form-control-md" name="bayar" id="bayar">
+                                    <input type="number" class="form-control form-control-md val-num" name="bayar" id="bayar">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Kembalian</label>
-                                    <input type="number" class="form-control form-control-md" name="kembalian" id="kembalian">
+                                    <input type="number" class="form-control form-control-md val-num" name="kembalian" id="kembalian">
                                 </div>
                             </div>
                             <div class="card-footer">

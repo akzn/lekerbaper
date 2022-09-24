@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">Nama Menu</label>
-                                        <input type="text" class="form-control form-control-md" name="name" value="<?=@$_POST['name']?>" >
+                                        <input type="text" class="form-control form-control-md val-alphanum" name="name" value="<?=@$_POST['name']?>" >
                                     </div>
                                     <div class="form-group">
                                         <label for="">Kategori Menu</label>
@@ -82,11 +82,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">Harga</label>
-                                        <input type="number" class="form-control form-control-md" name="harga" value="<?=@$_POST['harga']?>" >
+                                        <input type="number" class="form-control form-control-md val-num" name="harga" value="<?=@$_POST['harga']?>" >
                                     </div>
                                     <div class="form-group">
                                         <label for="">Deskripsi</label>
-                                        <textarea name="description" rows="7" class="form-control form-control-md"><?=@$_POST['description']?></textarea>
+                                        <textarea name="description" rows="7" class="form-control form-control-md val-alphanum"><?=@$_POST['description']?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Gambar Menu</label>

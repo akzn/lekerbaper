@@ -64,11 +64,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">Nama Kategori </label>
-                                        <input type="text" class="form-control form-control-md" name="name" >
+                                        <input type="text" class="form-control form-control-md val-alphanum" name="name" >
                                     </div>
                                     <div class="form-group">
                                         <label for="">Deskripsi</label>
-                                        <textarea name="description" rows="5" class="form-control"></textarea>
+                                        <textarea name="description" rows="5" class="form-control val-alphanum"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Gambar Kategori</label>

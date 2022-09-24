@@ -1,9 +1,14 @@
 <?php 
 
     $db = new Resto();
-    $plg = $db->getCountRows("tb_pelanggan");
+    // $plg = $db->getCountRows("tb_pelanggan");
     $mn = $db->getCountRows("tb_menu");
     $kt = $db->getCountRows("tb_kategori");
+
+    $con = $db->connect();
+    $qantar = "SELECT count(kd_detail) as jum from tb_detail_order where status_detail = 'siap'";
+    $siap_antar = $db->getQuery($qantar)[0]['jum']; 
+
 
  ?>
 <section class="au-breadcrumb m-t-75">
@@ -33,7 +38,7 @@
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="row" style="margin-top: -30px;">
-                <div class="col-sm-6 col-lg-4">
+                <div class="col-sm-6 col-lg-4 d-none">
                     <div class="overview-item overview-item--c1">
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
@@ -77,8 +82,8 @@
                                     <i class="zmdi zmdi-calendar-note"></i>
                                 </div>
                                 <div class="text">
-                                    <h2><?= $kt ?></h2>
-                                    <span>Kategori</span>
+                                    <h2><?= $siap_antar ?></h2>
+                                    <span>Menu Siap DIantar</span>
                                 </div>
                             </div>
                             <div class="overview-chart">

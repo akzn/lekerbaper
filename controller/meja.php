@@ -6,7 +6,7 @@
 	    {
 	        global $con;
 	        $sql   = "SELECT * FROM tb_meja";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;

@@ -385,7 +385,7 @@
 													</div>
 													<!-- <input type="number" name="total" class="form-control counter" data-min="1" id="
 													jumjum" data-default="0"> -->
-													<input type="number" id="jumjum" name="total" class="form-control" value="0">
+													<input type="number" id="jumjum" name="total" class="form-control val-num" value="0">
 													<div class="input-group-prepend">
 														<button id="btnPlus" type="button" class="btn-add btn btn-primary">
 														<i class="fa fa-plus"></i>
@@ -403,7 +403,7 @@
 												</div>
 												<div class="form-group">
 													<label for=""><b>Sub Total</b></label>
-													<input type="text" name="sub_total" class="form-control" id="totals" value="0">
+													<input type="text" name="sub_total" class="form-control val-num" id="totals" value="0" disabled>
 												</div>
 												<br>
 												<button name="btnTambah" class="btn btn-success float-right">Tambahkan ke pesanan</button>

@@ -1,3 +1,9 @@
+
+<?php
+    if(isset($_GET['logout'])){
+        $function->logoutCrew();
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -46,6 +52,10 @@
             }
 
         </style>
+        <script src="vendor/jquery-3.2.1.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        
     </head>
     <body>
         <div class="page-wrapper">
@@ -64,3 +74,128 @@
                         <h4 class="name"><?=$auth['name'];?></h4>
                         <span><?= $auth['level'] ?></span>
                     </div>
+
+
+                    <!-- NAV -->
+                    <nav class="navbar-sidebar2">
+                        <ul class="list-unstyled navbar__list">
+                            <?php if (($auth['level'] == "Admin") || $auth['level'] == "Waiter" || $auth['level'] == "Owner" ): ?>
+                            <li>
+                                <a href="?page">
+                                <i class="zmdi zmdi-view-dashboard zmdi-hc-lg"></i>Dashboard</a>
+                            </li>
+                             <?php endif ?>
+
+                            <?php if ($auth['level'] == "Admin"): ?>
+                                <li class="has-sub">
+                                    <a class="js-arrow" href="#">
+                                        <i class="zmdi zmdi-account zmdi-hc-lg"></i>Pengguna
+                                        <!-- <i class="fas fa-caret-down"></i> -->
+                                    </a>
+                                    <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                        <li>
+                                            <a href="?page=createPengguna">
+                                            Tambah Pengguna</a>
+                                        </li>
+                                        <li>
+                                            <a href="?page=indexPengguna">
+                                            <!-- <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i> -->
+                                            Pengguna</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            <?php endif ?>
+                            
+                            <?php if ($auth['level'] == "Admin"): ?>
+                            <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i>Menu
+                                <!-- <i class="fas fa-caret-down"></i> -->
+                            </a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                    <li>
+                                        <a href="?page=indexKategori">
+                                        <!-- <i class="zmdi zmdi-widgets zmdi-hc-lg"></i> -->
+                                        Kategori Menu</a>
+                                    </li>
+                                    <li>
+                                        <a href="?page=indexMenu">
+                                        <!-- <i class="zmdi zmdi-local-dining zmdi-hc-lg"></i> -->
+                                        Daftar Menu</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <?php endif ?>
+
+                            <?php if ($auth['level'] == "Admin"): ?>
+                            <li>
+                                <a href="?page=indexMeja">
+                                <i class="zmdi zmdi-chart zmdi-hc-lg"></i>Meja</a>
+                            </li>
+                            <?php endif ?>
+                            <!-- <li>
+                                <a href="index_admin.php" target="_blank">
+                                <i class="zmdi zmdi-shopping-cart zmdi-hc-lg"></i>Order</a>
+                            </li> -->
+
+
+                            <?php if ($auth['level'] == "Admin" || $auth['level'] == "Kasir"): ?>
+                            <li>
+                                <a href="?page=indexTransaksi">
+                                <i class="zmdi zmdi-card zmdi-hc-lg"></i>Transaksi</a>
+                            </li>
+                            <li class="has-sub">
+                                <a class="js-arrow" href="#">
+                                <i class="fas fa-archive"></i>Laporan<!-- <i class="fas fa-caret-down"></i> --></a>
+                                <!-- <ul class="navbar-mobile-sub__list list-unstyled js-sub-list"> -->
+                                <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                    <li>
+                                        <a href="?page=indexLaporan">Kelola Transaksi</a>
+                                    </li>
+                                    <li>
+                                        <a href="?page=order_periode">Orderan per Periode</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <?php endif ?>
+
+                            <?php if ($auth['level'] == "Waiter"): ?>
+                            <li>
+                                <a href="pageWaiterOrder.php" target="_blank">
+                                <i class="zmdi zmdi-shopping-cart zmdi-hc-lg"></i>Order</a>
+                            </li>
+                            <?php endif ?>
+                        </ul>
+                    </nav>
+                </div>
+            </aside>
+
+            <div class="page-container2">
+                <header class="header-desktop2">
+                    <div class="section__content section__content--p30">
+                        <div class="container-fluid">
+                            <div class="header-wrap2">
+                                <div class="logo d-block d-lg-none">
+                                    <a href="#">
+                                        <img src="images/icon/logo-white.png" alt="CoolAdmin" />
+                                    </a>
+                                </div>
+                                <div class="header-button2">
+                                    
+                                    <div class="header-button-item mr-0 js-sidebar-btn">
+                                        <i class="zmdi zmdi-menu"></i>
+                                    </div>
+                                    <div class="setting-menu js-right-sidebar d-none d-lg-block">
+                                        <div class="account-dropdown__body">
+                                            
+                                            <div class="account-dropdown__item">
+                                                <a href="homepage.php?logout" id="forLogout">
+                                                <i class="zmdi zmdi-power"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
