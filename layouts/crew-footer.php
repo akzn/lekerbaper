@@ -30,6 +30,7 @@
         <script src="js/main.js"></script>
         <script src="js/sweetalert.min.js"></script>
         <script src="js/bootstrap-datepicker.min.js"></script>
+        <script src="js/validation.js"></script>
         <script>
         $(document).ready(function(){
 

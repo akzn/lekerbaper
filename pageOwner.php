@@ -53,6 +53,12 @@ if (isset($_GET['logout'])) {
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 </head>
 <body>
 
@@ -80,11 +86,11 @@ if (isset($_GET['logout'])) {
                         </li>
                         <li>
                             <a href="?page=indexLaporan">
-                            <i class="zmdi zmdi-book zmdi-hc-lg"></i>Laporan Periode</a>
+                            <i class="zmdi zmdi-book zmdi-hc-lg"></i>Laporan Transaksi</a>
                         </li>
                         <li>
-                            <a href="?page=indexLaporanTrans">
-                            <i class="zmdi zmdi-book zmdi-hc-lg"></i>Laporan Transaksi</a>
+                            <a href="?page=order_periode">
+                            <i class="zmdi zmdi-book zmdi-hc-lg"></i>Laporan Periode</a>
                         </li>
                     </ul>
                 </nav>
@@ -212,11 +218,16 @@ if (isset($_GET['logout'])) {
 
             @$page = $_GET['page'];
             switch ($page) {
-                case "indexLaporan":
-                    include "page/owner/laporan_periode.php";
+                case "order_periode":
+                    // include "page/owner/laporan_periode.php";
+                    include "page/admin/laporan/order_periode.php";
                     break;
-                case "indexLaporanTrans":
-                    include "page/owner/laporan_transaksi.php";
+                case 'order_periode_print':
+                    include "page/admin/laporan/order_periode_print.php";
+                    break;
+                case "indexLaporan":
+                    // include "page/owner/laporan_transaksi.php";
+                    include "page/kasir/laporan/laporan_transaksi.php";
                     break;
                 default:
                     $page = "dashboard";
@@ -230,10 +241,6 @@ if (isset($_GET['logout'])) {
 
     </div>
 
-    <!-- Jquery JS-->
-    <script src="vendor/jquery-3.2.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <!-- Bootstrap JS-->
     <script src="vendor/bootstrap-4.1/popper.min.js"></script>
     <script src="vendor/bootstrap-4.1/bootstrap.min.js"></script>

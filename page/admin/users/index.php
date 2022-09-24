@@ -26,6 +26,7 @@
         </div>
     </div>
 </section>
+
 <div class="main-content" style="margin-top: -60px;">
     <div class="section__content section__content--p30">
         <div class="container-fluid">
@@ -36,6 +37,7 @@
                             <strong class="card-title mb-3">Data Pengguna</strong>
                         </div>
                         <div class="card-body">
+                            <a href="?page=createPengguna" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Crew</a>
                             <div class="table-responsive">
                                 <table id="example" class="table table-borderless table-striped table-earning">
                                     <thead>

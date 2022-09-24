@@ -1,15 +1,35 @@
 <?php
       $lp        = new Resto();
-      $dataTrans = $lp->selectOrderBy("transaksi", "waktu");
-      $grand     = $lp->selectSum("transaksi", "total_harga");
+      // $dataTrans = $lp->selectOrderBy("tb_transaksi", "waktu");
+      $queryDetailORder = "SELECT * from tb_transaksi a 
+                  join tb_order c on a.order_kd=c.kd_order order by CONVERT(SUBSTR(kd_transaksi,3),SIGNED INTEGER) desc";
+
+      $dataTrans = $lp->getQuery($queryDetailORder);
+
+      $grand     = $lp->selectSum("tb_transaksi", "total_harga");
       if (isset($_GET['kd'])) {
             $id         = $_GET['kd'];
-            $dataDetail = $lp->edit("detail_order", "transaksi_kd", $id);
-            $total      = $lp->selectSumWhere("detail_order", "sub_total", "transaksi_kd='$id'");
-            $jumlahMenu = $lp->selectSumWhere("detail_order", "total", "transaksi_kd='$id'");
+            $dataDetail = $lp->edit("tb_detail_order", "transaksi_kd", $id);
+            $total      = $lp->selectSumWhere("tb_detail_order", "sub_total", "transaksi_kd='$id'");
+            $jumlahMenu = $lp->selectSumWhere("tb_detail_order", "total", "transaksi_kd='$id'");
+
+            $dataTrans = $lp->selectWhere('tb_transaksi','kd_transaksi', $id);
+            $queryDetailORder = "SELECT * from tb_detail_order a 
+                  join tb_menu b on a.menu_kd = b.kd_menu 
+                  join tb_order c on a.order_kd=c.kd_order
+                  where a.order_kd='$dataTrans[order_kd]'";
+
+            $dataDetail = $lp->getQuery($queryDetailORder);
+
+            $queryTotal = "SELECT sum(sub_total) as sum from tb_detail_order a 
+                  join tb_menu b on a.menu_kd = b.kd_menu 
+                  join tb_order c on a.order_kd=c.kd_order
+                  where a.order_kd='$dataTrans[order_kd]'";
+            $total = $lp->getQuery($queryTotal)[0];
+
       }
       if(isset($_POST['btnOrder'])){
-            $dataTrans = $lp->select("transaksi");
+            $dataTrans = $lp->select("tb_transaksi");
       }
 ?>
 <div class="main-content">
@@ -50,6 +70,7 @@
                                           </div>
                                           <br>
                                           <div class="table-responsive">
+                                          
                                                 <table class="table table-striped table-bordered" width="80%">
                                                       <tr>
                                                             <td>Kode Antrian</td>
@@ -90,11 +111,11 @@
                                           <hr>
                                           <p class="text-right"><?php echo "Tanggal Cetak : " . date("Y-m-d"); ?></p>
                                           <br>
-                                          <table class="table table-hover table-bordered" width="100%;" align="center">
+                                          <table class="table table-hover table-bordered dttb" width="100%;" align="center">
                                                 <thead>
                                                       <tr>
                                                             <td>Kode Transaksi</td>
-                                                            <td>Nama Kasir</td>
+                                                            <!-- <td>Nama Kasir</td> -->
                                                             <td>Total Harga</td>
                                                             <td>Tanggal Beli</td>
                                                       </tr>
@@ -102,19 +123,33 @@
                                                 <tbody>
                                                       <?php foreach ($dataTrans as $dts): ?>
                                                       <tr>
-                                                            <td><?=$dts['kd_transaksi']?></td>
-                                                            <td><?=$dts['name']?></td>
+                                                            <td><a href="?page=indexLaporan&kd=<?=$dts['kd_transaksi'];?>"><?=$dts['kd_transaksi']?></a></td>
+                                                            <!-- <td><?=$dts['name']?></td> -->
                                                             <td><?="Rp." . number_format($dts['total_harga']) . ",-"?></td>
                                                             <td><?=$dts['tanggal']?></td>
                                                       </tr>
                                                       <?php endforeach?>
+                                                      
+                                                </tbody>
+                                                <!-- <tfoot>
                                                       <tr>
                                                             <td></td>
                                                             <td>Grand Total</td>
                                                             <td><?php echo "Rp." . number_format($grand['sum']) . ",-" ?></td>
                                                             <td></td>
                                                       </tr>
-                                                </tbody>
+                                                </tfoot> -->
+                                          </table>
+
+                                          <table class="table table-bordered">
+                                                <tfoot>
+                                                      <tr>
+                                                            
+                                                            <td>Grand Total</td>
+                                                            <td><?php echo "Rp." . number_format($grand['sum']) . ",-" ?></td>
+                                                            
+                                                      </tr>
+                                                </tfoot>
                                           </table>
                                           <br>
                                           <form method="post">
@@ -148,7 +183,7 @@
                                     <thead>
                                           <tr>
                                                 <td>Kode Transaksi</td>
-                                                <td>Nama Penjual</td>
+                                                <!-- <td>Nama Penjual</td> -->
                                                 <td>Total Harga</td>
                                                 <td>Tanggal Beli</td>
                                           </tr>
@@ -157,7 +192,7 @@
                                           <?php foreach ($dataTrans as $dts): ?>
                                           <tr>
                                                 <td><a href="?page=indexLaporan&kd=<?=$dts['kd_transaksi'];?>"><?=$dts['kd_transaksi']?></a></td>
-                                                <td><?=$dts['name']?></td>
+                                                <!-- <td><?=$dts['name']?></td> -->
                                                 <td><?=$dts['total_harga']?></td>
                                                 <td><?=$dts['tanggal']?></td>
                                           </tr>
@@ -169,3 +204,11 @@
             </div>
       </div>
 </div>
+
+<script type="text/javascript">
+      $(function(){
+            $('.dttb').DataTable({
+                  "order":[]
+            });
+      })
+</script>

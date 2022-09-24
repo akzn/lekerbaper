@@ -19,8 +19,10 @@
         <script src="vendor/select2/select2.min.js">
         </script>
         <script src="js/sweetalert.min.js"></script>
+        <script src="js/validation.js"></script>
         <!-- Main JS-->
         <script src="js/main.js"></script>
+
         <?php include "config/alert.php";?>
     </body>
 </html>

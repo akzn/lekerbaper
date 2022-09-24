@@ -3,6 +3,11 @@
     include "config/controller.php";
     $header_title = 'Halaman Login';
     session_start();
+
+    /*captcha*/
+    include_once './library/securimage/securimage.php';
+    $securimage = new Securimage();
+
     $lg = new Resto();
     if ($lg->sessionCheck() == "true") {
     if (@$_SESSION['level'] == "Admin") {
@@ -21,8 +26,12 @@
         $username = strtolower($_POST['username']); // mengambil value username dan memaksa menjadi huruf kecil
         $password = $_POST['password']; // mengambil value password
         // menggunakan function login yang ada di controller
-
-        if ($_GET['page']=='crew') {
+        /*captcha*/
+        // var_dump($_POST);
+        if ($securimage->check($_POST['captcha_code']) == true) {
+          $captchaMsg = "The security code entered was incorrect.<br /><br />";
+          // echo "Please go <a href='javascript:history.go(-1)'>back</a> and try again.";
+        } else if ($_GET['page']=='crew') {
             // Jika Login Crew
             if ($response = $lg->login($username, $password)) {
                 if ($response['response'] == "positive") {
@@ -63,7 +72,7 @@
         $signUpButton = 'd-none';
         $logo = '<i class="fas fa-users text-center fa-2x color-shade-black" style="font-size:70px;"></i>';
         $logoU = '<img src="images/lekerbaper-logo-transparent.png" width="100" alt="LekerBaper">';
-        $bg_url = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+        // $bg_url = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
     } else {
         $title = 'Hi, Customer';
         $leftButton = 'fa-users';
@@ -71,8 +80,18 @@
         $signUpButton = '';
         $logo = '<img src="images/lekerbaper-logo-transparent.png" width="100" alt="LekerBaper">';
     }
-?>
 
+    /*deisable customer, login to crew*/
+    if ($_GET['page']!='crew') {
+        header('Location: '.BASE_URL.'login.php?page=crew');
+    }
+?>
+<script type="text/javascript">
+    function refreshCaptcha(){
+    var img = document.images['captchaimg'];
+    img.src = img.src.substring(0,img.src.lastIndexOf("?"))+"?rand="+Math.random()*1000;
+}
+</script>
 <?php include "layouts/header.php";?>
 
         <style type="text/css">
@@ -99,14 +118,14 @@
             }
         </style>
 
-        <div class="crewloginsticky">
+        <div class="crewloginsticky d-none">
             <div class="bodys">
                 <a href="<?=$urlLogin?>">
                     <i class="fas <?=$leftButton?> text-center fa-2x color-shade-black"></i>
                 </a>
             </div>
         </div>
-        <div class="page-wrapper">
+        <div class="page-wrapper pt-5">
             <div class="container">
                 <div class="text-center"><?=$logoU?></div>
                 <div class="login-wrap">
@@ -118,10 +137,16 @@
                         </div>
                         <div class="text-center"><h3><?=$title?></h3></div>
                         <div class="login-form">
+                            <!-- warning -->
+                            <?php if (isset($captchaMsg)): ?>
+                                <div class="alert alert-danger mt-2">
+                                  <strong>Error!</strong> <?=$captchaMsg?>
+                                </div>
+                            <?php endif ?>
                             <form action="" method="post">
                                 <div class="form-group">
                                     <label>Username</label>
-                                    <input required class="form-control" type="text" name="username" placeholder="Username" value="<?= @$_POST['username'] ?>">
+                                    <input required class="form-control val-alphanum" type="text" name="username" placeholder="Username" value="<?= @$_POST['username'] ?>">
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
@@ -136,6 +161,15 @@
                                     </label>
                                 </div>
                                 <br>
+
+                                <div class="form-group">
+                                    <label>Captcha</label>
+                                    <img id="captcha" src="./library/securimage/securimage_show.php" alt="CAPTCHA Image" />
+                                    <a href="#" onclick="document.getElementById('captcha').src = './library/securimage/securimage_show.php?' + Math.random(); return false">[ Refresh ]</a>
+                                    <br>
+                                    <input required class="form-control" type="text" name="captcha_code" size="10" maxlength="6" autocomplete="off">
+                                </div>
+
                                 <button name="btnLogin" class="au-btn au-btn--block au-btn--green m-b-20" type="submit">sign in</button>
                                 <a href="<?=BASE_URL.'register_customer.php'?>" class="btn btn-danger au-btn--block <?=$signUpButton?>">Sign Up</a>
                             </form>

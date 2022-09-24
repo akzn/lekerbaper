@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Nama</label>
-                                    <input class="au-input au-input--full" type="text" name="nama_user" value="<?=$getUser['name'];?>" placeholder="Nama">
+                                    <input class="au-input au-input--full val-alphanum" type="text" name="nama_user" value="<?=$getUser['name'];?>" placeholder="Nama">
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
@@ -100,11 +100,18 @@
                                 </div> -->
                                 <div class="form-group">
                                     <label for="level" class="control-label mb-1">Level</label>
-                                    <select name="level" class="form-control mb-1">
+                                    <!-- <select name="level" class="form-control mb-1">
                                         <option value="">Pilih Level</option>
                                         <?php foreach ($getLevel as $level) {?>
                                         <option value="<?=$level['name']?>" <?=($getUser['level']==$level['name'])?'selected':'';?> ><?=$level['name']?></option>
                                         <?php }?>
+                                    </select> -->
+                                    <select name="level" class="form-control mb-1">
+                                        <option value="Admin">Admin</option>
+                                        <option value="Waiter">Waiter</option>
+                                        <option value="Koki">Koki</option>
+                                        <option value="Kasir">Kasir</option>
+                                        <option value="Owner">Owner</option>
                                     </select>
                                 </div>
                                 <br>

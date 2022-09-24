@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">Nama Menu</label>
-                                        <input type="text" class="form-control form-control-md" name="name" value="<?=$data['name_menu']?>" >
+                                        <input type="text" class="form-control form-control-md val-alphanum" name="name" value="<?=$data['name_menu']?>" >
                                     </div>
                                     <div class="form-group">
                                         <label for="">Kategori Menu</label>
@@ -91,11 +91,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="">Harga</label>
-                                        <input type="number" class="form-control form-control-md" name="harga" value="<?=$data['harga']?>" >
+                                        <input type="number" class="form-control form-control-md val-num" name="harga" value="<?=$data['harga']?>" >
                                     </div>
                                     <div class="form-group">
                                         <label for="">Deskripsi</label>
-                                        <textarea name="description" rows="7" class="form-control form-control-md"><?=$data['description']?></textarea>
+                                        <textarea name="description" rows="7" class="form-control form-control-md val-alphanum"><?=$data['description']?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="">Gambar Menu</label>

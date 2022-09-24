@@ -12,6 +12,7 @@
 		public function __construct()
 			{
 				$this->con = mysqli_connect($this->hostname, $this->username, $this->password, $this->database) or die("Connection corrupt");
+
 			}	
 	}
 

@@ -4,11 +4,20 @@
 
 	class Resto extends koneksi{
 
+		public function __construct(){
+			$this->con = mysqli_connect($this->hostname, $this->username, $this->password, $this->database) or die("Connection corrupt");
+		}
+
+		public function connect() {
+			$this->con = mysqli_connect($this->hostname, $this->username, $this->password, $this->database) or die("Connection corrupt");
+			return $this->con;
+		}
+
 		public function select($table)
 	    {
 	        global $con;
 	        $sql   = "SELECT * FROM $table";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
@@ -18,23 +27,31 @@
 
 		public function selectWhere($table, $where, $whereValues){
 			global $con;
+			$whereValues = mysqli_real_escape_string($this->con,$whereValues);
 			$sql 			= "SELECT * FROM $table WHERE $where='$whereValues'";
-			$query 			= mysqli_query($con, $sql);
+			// var_dump($sql);
+			$query 			= mysqli_query($this->con, $sql);
 			return $data 	= mysqli_fetch_assoc($query);
 		} 
 
 		public function selectSumWhere($table, $namaField, $where)
 	    {
 	        global $con;
+	        $where = mysqli_real_escape_string($this->con,$where);
 	        $sql         = "SELECT SUM($namaField) as sum FROM $table WHERE $where";
-	        $query       = mysqli_query($con, $sql);
-	        return $data = mysqli_fetch_assoc($query);
+	        $query       = mysqli_query($this->con, $sql);
+
+	        if (mysqli_num_rows($query)>0) {
+	        	return $data = mysqli_fetch_assoc($query);
+	        } else return 0;
+	        
+	        // return $data = mysqli_fetch_assoc($query);
 	    }
 
 		public function selectOrderBy($table, $field){
 			global $con;
 	        $sql   = "SELECT * FROM $table ORDER BY $field DESC";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
@@ -45,7 +62,7 @@
 		public function getQuery($query){
 			global $con;
 			$sql = $query;
-			$query = mysqli_query($con, $sql);
+			$query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
@@ -56,8 +73,9 @@
 		public function edit($table, $where, $whereValues)
 	    {
 	        global $con;
+	        $whereValues = mysqli_real_escape_string($this->con,$whereValues);
 	        $sql   = "SELECT * FROM $table WHERE $where = '$whereValues'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
@@ -68,8 +86,8 @@
 		public function insert($table, $values, $redirect){
 			global $con;
 			$sql = "INSERT INTO $table VALUES($values)";
-			var_dump($sql);
-			$query = mysqli_query($con, $sql);
+			// var_dump($sql);
+			$query = mysqli_query($this->con, $sql);
 			if($query){
 				return ['response'=>'positive', 'alert'=>'Berhasil Menambahkan Data',  'redirect'=>$redirect];
 			}else{
@@ -79,8 +97,9 @@
 
 		public function update($table, $value, $where, $whereValues, $redirect){
 			global $con;
+			$whereValues = mysqli_real_escape_string($this->con,$whereValues);
 			$sql = "UPDATE $table SET $value WHERE $where='$whereValues'";
-			$query = mysqli_query($con, $sql);
+			$query = mysqli_query($this->con, $sql);
 			if($query){
 				return ['response'=>'positive', 'alert'=>'Berhasil Update Data',  'redirect'=>$redirect];
 			}else{
@@ -91,7 +110,7 @@
 		public function sqlQuery($query,$redirect=null){
 			global $con;
 			$sql = $query;
-			$query = mysqli_query($con, $sql);
+			$query = mysqli_query($this->con, $sql);
 			if($query){
 				return ['response'=>'positive', 'alert'=>'Berhasil Update Data',  'redirect'=>$redirect];
 			}else{
@@ -101,8 +120,9 @@
 
 		public function delete($table, $where, $whereValues, $redirect){
 			global $con;
+			$whereValues = mysqli_real_escape_string($this->con,$whereValues);
 			$sql = "DELETE FROM $table WHERE $where='$whereValues'";
-			$query = mysqli_query($con, $sql);
+			$query = mysqli_query($this->con, $sql);
 			if($query){
 				return ['response'=>'positive', 'alert'=>'Berhasil Hapus Data',  'redirect'=>$redirect];
 			}else{
@@ -118,6 +138,14 @@
 	        return ['response' => 'positive', 'alert' => 'Logout Berhasil'];
 	    }
 
+	    public function logoutCrew()
+	    {
+	        session_destroy();
+	        // header("Location:loginMulti.php");
+	        header("Location:login.php?page=crew");
+	        return ['response' => 'positive', 'alert' => 'Logout Berhasil'];
+	    }
+
 		public function logout2()
 	    {
 	        session_destroy();
@@ -128,9 +156,11 @@
 		public function login($username, $password)
 	    {
 	        global $con;
+	        $username = mysqli_real_escape_string($this->con,$username);
+	        $password = mysqli_real_escape_string($this->con,$password);
 
 	        $sql   = "SELECT * FROM tb_user WHERE username ='$username'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $rows  = mysqli_num_rows($query);
 	        $assoc = mysqli_fetch_assoc($query);
 	        if ($rows > 0) {
@@ -147,9 +177,10 @@
 
 	    public function loginCustomer($username,$password){
 	    	global $con;
-
+	    	$username = mysqli_real_escape_string($this->con,$username);
+	        $password = mysqli_real_escape_string($this->con,$password);
 	        $sql   = "SELECT * FROM tb_pelanggan WHERE username ='$username'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $rows  = mysqli_num_rows($query);
 	        $assoc = mysqli_fetch_assoc($query);
 	        if ($rows > 0) {
@@ -175,8 +206,10 @@
 	    	global $con;
 	        global $rg;
 
+	        $username = mysqli_real_escape_string($this->con,$username);
+	        $password = mysqli_real_escape_string($this->con,$password);
 	        $sql   = "SELECT * FROM tb_user WHERE username = '$username'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 
 	        $rows = mysqli_num_rows($query);
 
@@ -195,7 +228,7 @@
 	            if ($password == $confirm) {
 	                $password = base64_encode($password);
 	                $sql      = "INSERT INTO tb_user VALUES('$kd_user','$name','$email','$username','$password','$level')";
-	                $query    = mysqli_query($con, $sql);
+	                $query    = mysqli_query($this->con, $sql);
 	                if ($query) {
 	                    return ['response' => 'positive', 'alert' => 'Registrasi Berhasil', 'redirect' => $redirect];
 	                } else {
@@ -218,11 +251,16 @@
 	    {
 	    	global $con;
 	        global $rg;
+	        // mysqli_close($con);
+
+	        $username = mysqli_real_escape_string($this->con,$username);
+	        $password = mysqli_real_escape_string($this->con,$password);
 
 	        $sql   = "SELECT * FROM tb_pelanggan WHERE username = '$username'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 
 	        $rows = mysqli_num_rows($query);
+	        echo $rows;
 
 	        if (strlen($username) < 6) {
 	            return ['response' => 'negative', 'alert' => 'username minimal 6 Huruf'];
@@ -239,7 +277,7 @@
 	            if ($password == $confirm) {
 	                $password = base64_encode($password);
 	                $sql      = "INSERT INTO tb_pelanggan(kd_pelanggan,name_pelanggan,email,username,password) VALUES('$kd_user','$name','$email','$username','$password')";
-	                $query    = mysqli_query($con, $sql);
+	                $query    = mysqli_query($this->con, $sql);
 	                if ($query) {
 	                    return ['response' => 'positive', 'alert' => 'Registrasi Berhasil', 'redirect' => $redirect];
 	                } else {
@@ -264,11 +302,14 @@
     	public function register_pelanggan($kd_user, $name, $email, $username, $password, $level, $redirect)
 	    {
 
+	    	$username = mysqli_real_escape_string($this->con,$username);
+	        $password = mysqli_real_escape_string($this->con,$password);
+
 	        global $con;
 	        global $rg;
 
 	        $sql   = "SELECT * FROM tb_user WHERE username = '$username'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 
 	        $rows = mysqli_num_rows($query);
 
@@ -286,7 +327,7 @@
 
 	            $password = base64_encode($password);
 	            $sql      = "INSERT INTO tb_user VALUES('$kd_user','$name','$email','$username','$password','$level')";
-	            $query    = mysqli_query($con, $sql);
+	            $query    = mysqli_query($this->con, $sql);
 	            if ($query) {
 	                return ['response' => 'positive', 'alert' => 'Registrasi Berhasil', 'redirect' => $redirect];
 	            } else {
@@ -307,20 +348,27 @@
     	{
 	        global $con;
 	        $sqlc   = "SELECT COUNT($field) as jumlah FROM $table";
-	        $querys = mysqli_query($con, $sqlc);
+	        $querys = mysqli_query($this->con, $sqlc);
 	        $number = mysqli_fetch_assoc($querys);
 	        if ($number['jumlah'] > 0) {
-	            $sql    = "SELECT MAX($field) as kode FROM $table";
-	            $query  = mysqli_query($con, $sql);
+	            // $sql    = "SELECT MAX($field) as kode FROM $table";
+	            $sql    = "SELECT MAX(CONVERT(SUBSTR($field,3),SIGNED INTEGER)) as kode FROM $table";
+	            // var_dump($sql);
+	            $query  = mysqli_query($this->con, $sql);
 	            $number = mysqli_fetch_assoc($query);
-	            $strnum = substr($number['kode'], 2, 3);
+	            // var_dump($number);
+	            // $strnum = substr($number['kode'], 2, 3);
+	            $strnum = $number['kode'];
 	            $strnum = $strnum + 1;
+	            // var_dump($strnum);
 	            if (strlen($strnum) == 3) {
 	                $kode = $pre . $strnum;
 	            } else if (strlen($strnum) == 2) {
 	                $kode = $pre . "0" . $strnum;
 	            } else if (strlen($strnum) == 1) {
 	                $kode = $pre . "00" . $strnum;
+	            } else {
+	            	$kode = $pre . $strnum;
 	            }
 	        } else {
 	            $kode = $pre . "001";
@@ -340,8 +388,9 @@
     	public function AuthUser($sessionUser)
     	{
     		global $con;
+    		$sessionUser = mysqli_real_escape_string($this->con,$sessionUser);
     		$sql = "SELECT * FROM tb_user WHERE username = '$sessionUser'";
-    		$query = mysqli_query($con, $sql);
+    		$query = mysqli_query($this->con, $sql);
     		$bigData = mysqli_fetch_assoc($query);
     		return $bigData;
     	}
@@ -354,7 +403,7 @@
 	    public function getCountRows($table){
 	    	global $con;
 	    	$sql = "SELECT * FROM $table";
-	    	$query = mysqli_query($con, $sql);
+	    	$query = mysqli_query($this->con, $sql);
 	    	$rows = mysqli_num_rows($query);
 	    	return $rows;
 	    }
@@ -401,16 +450,18 @@
 	    public function AuthPelanggan($sessionUser){
 	    	global $con;
 	    	$sql 		= "SELECT * FROM tb_pelanggan WHERE name_pelanggan = '$sessionUser'";
-	    	$query 		= mysqli_query($con, $sql);
-	    	$bigData 	= mysqli_fetch_assoc($query);
-	    	return $bigData;
+	    	// $query 		= mysqli_query($this->con, $sql);
+	    	// $bigData 	= mysqli_fetch_assoc($query);
+	    	// return $bigData;
 	    }
 
 	    public function editWhere($table, $where, $whereValues, $where2, $whereValues2)
 	    {
 	        global $con;
+	        $whereValues = mysqli_real_escape_string($this->con,$whereValues);
+	        $whereValues2 = mysqli_real_escape_string($this->con,$whereValues2);
 	        $sql   = "SELECT * FROM $table WHERE $where = '$whereValues' AND $where2 = '$whereValues2'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
@@ -421,8 +472,9 @@
 
 	    public function selectOrderDate($table, $where, $whereValues, $field){
 	    	global $con;
+	    	$whereValues = mysqli_real_escape_string($this->con,$whereValues);
 	    	$sql = "SELECT * FROM $table WHERE $where ='$whereValues' ORDER BY $field DESC";
-	    	$query = mysqli_query($con, $sql);
+	    	$query = mysqli_query($this->con, $sql);
 	    	$data = [];
 	    	while($bigData = mysqli_fetch_assoc($query)){
 	    		$data[] = $bigData;
@@ -434,7 +486,7 @@
 	    {
 	        global $con;
 	        $sql   = "SELECT * FROM $table ORDER BY $field DESC";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data  = [];
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
@@ -446,16 +498,20 @@
 	    {
 	        global $con;
 	        $sql         = "SELECT SUM($namaField) as sum FROM $table";
-	        $query       = mysqli_query($con, $sql);
-	        return $data = mysqli_fetch_assoc($query);
+	        $query       = mysqli_query($this->con, $sql);
+	        if (mysqli_num_rows($query)>0) {
+	        	return $data = mysqli_fetch_assoc($query);
+	        } else return 0;
+	        // return $data = mysqli_fetch_assoc($query);
 	    }
 
 	    public function selectBetween($table, $whereparam, $param, $param1)
 	    {
 	        global $con;
 	        $sql   = "SELECT * FROM $table WHERE $whereparam BETWEEN '$param' AND '$param1'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 	        $data   = [];
+	        // var_dump($sql);
 	        while ($bigData = mysqli_fetch_assoc($query)) {
 	            $data[] = $bigData;
 	        }
@@ -466,7 +522,7 @@
 	    {
 	        global $con;
 	        $sql   = "SELECT * FROM $table WHERE $where = '$whereValues' AND $where2 = '$whereValues2'";
-	        $query = mysqli_query($con, $sql);
+	        $query = mysqli_query($this->con, $sql);
 
 	        return $data = mysqli_num_rows($query);
 	    }
@@ -474,11 +530,11 @@
 
 	}
 
-		$hostname = "localhost";
-		$username = "root";
-		$password = "";
-		$database = "lekerbaper";
+		// $hostname = "localhost";
+		// $username = "root";
+		// $password = "";
+		// $database = "lekerbaper";
 
-		$con = mysqli_connect($hostname, $username, $password, $database) or die("Connection corrupt");
+		// $con = mysqli_connect($hostname, $username, $password, $database) or die("Connection corrupt");
 
  ?>

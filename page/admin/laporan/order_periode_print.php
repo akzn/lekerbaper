@@ -13,9 +13,10 @@
 	overflow-x: hidden;
 	}
 	</style>
-	<body onload="window.print()">
+	<body onload="goprint()">
 		<?php
-		include "../../../config/controller.php";
+		// include '../../../config/config.php';
+		// include "../../../config/controller.php";
 		$qb = new Resto();
 		if (!isset($_GET['dateAwal']) || !isset($_GET['dateAkhir'])) {
 		header("location:?page=order_periode");
@@ -23,7 +24,20 @@
 		$whereparam = "tanggal";
 		$param      = $_GET['dateAwal'];
 		$param1     = $_GET['dateAkhir'];
-		$data       = $qb->selectBetween("detail_order", $whereparam, $param, $param1);
+		// $data       = $qb->selectBetween("detail_order", $whereparam, $param, $param1);
+		$query =  "SELECT
+			  *,
+			  b.no_meja,b.tanggal
+			FROM
+			   tb_order b
+			  -- JOIN tb_pelanggan c
+			    -- ON b.kd_pelanggan = c.kd_pelanggan
+			    JOIN `tb_transaksi` d
+			    ON b.kd_order = d.order_kd
+				WHERE b.tanggal BETWEEN '$param'
+				  AND '$param1' ORDER BY b.tanggal desc";
+
+		$data = $qb->getQuery($query);
 		?>
 		<div class="row">
 			<div class="col-sm-12" style="padding: 50px;">
@@ -40,9 +54,9 @@
 								<th>Kode Order</th>
 								<th>Pelanggan</th>
 								<th>No Meja</th>
-								<th>Nama Menu</th>
-								<th>Jumlah</th>
-								<th>Sub total</th>
+								<!-- <th>Nama Menu</th> -->
+								<!-- <th>Jumlah</th> -->
+								<!-- <th>Sub total</th> -->
 								<th>Harga</th>
 								<th>Tanggal</th>
 							</tr>
@@ -53,12 +67,12 @@
 							foreach ($data as $ds) {?>
 							<tr>
 								<td><?=$ds['order_kd']?></td>
-								<td><?=$ds['name']?></td>
+								<td><?=$ds['name_pelanggan']?></td>
 								<td><?=$ds['no_meja']?></td>
-								<td><?=$ds['name_menu']?></td>
-								<td><?=$ds['total']?></td>
-								<td><?=$ds['sub_total']?></td>
-								<td><?=number_format($ds['harga'])?></td>
+								<!-- <td><?=$ds['name_menu']?></td> -->
+								<!-- <td><?=$ds['total']?></td> -->
+								<!-- <td><?=$ds['sub_total']?></td> -->
+								<td><?=number_format($ds['total_harga'])?></td>
 								<td><?=$ds['tanggal']?></td>
 								<?php $no++;}?>
 							</tbody>
@@ -67,5 +81,13 @@
 					<p style="font-size: 17px;">Tanggal cetak : <?=date("Y-m-d");?></p>
 				</div>
 			</div>
+
+			<script type="text/javascript">
+				function goprint(){
+					
+					setTimeout(function () { window.print(); window.close();}, 500);
+        			window.onfocus = function () { setTimeout(function () { window.close(); }, 500); }
+				}
+			</script>
 		</body>
 	</html>

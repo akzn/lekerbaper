@@ -1,5 +1,6 @@
 <?php
   $mj   = new Resto();
+  $con = $mj->connect();
   $data = $mj->select("tb_meja");
   $sql = "SELECT no_meja FROM tb_meja ORDER BY id DESC LIMIT 1;";
   $exe = mysqli_query($con, $sql);

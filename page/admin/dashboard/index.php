@@ -1,7 +1,7 @@
 <?php 
 
     $db = new Resto();
-    $plg = $db->getCountRows("tb_pelanggan");
+    // $plg = $db->getCountRows("tb_pelanggan");
     $mn = $db->getCountRows("tb_menu");
     $kt = $db->getCountRows("tb_kategori");
 
